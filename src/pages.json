@@ -1,0 +1,91 @@
+{
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"^r-(.*)": "@/components/$1/index.vue",
+			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+		}
+	},
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页"
+			}
+		},
+		{
+			"path": "pages/my/index",
+			"style": {
+				"navigationBarTitleText": "个人中心"
+			}
+		},
+		{
+			"path": "pages/winCustomer/index",
+			"style": {
+				"navigationBarTitleText": "获客活动"
+			}
+		},
+		{
+			"path": "pages/active/index",
+			"style": {
+				"navigationBarTitleText": "活动详情页面"
+			}
+		},
+		{
+			"path": "pages/edit/index",
+			"style": {
+				"navigationBarTitleText": "个人编辑"
+			}
+		},
+		{
+			"path": "pages/fodder/index",
+			"style": {
+				"navigationBarTitleText": "素材页面"
+			}
+		},
+		{
+			"path": "pages/moreSend/index",
+			"style": {
+				"navigationBarTitleText": "群发助手"
+			}
+		},
+		{
+			"path": "pages/user/list",
+			"style": {
+				"navigationBarTitleText": "用户列表"
+			}
+		},
+		{
+			"path": "pages/user/info",
+			"style": {
+				"navigationBarTitleText": "用户详情"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "医药线小程序&H5同构种子",
+		"navigationBarBackgroundColor": "#2f63ef",
+		"backgroundColor": "#2f63ef"
+	},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#007AFF",
+		"borderStyle": "black",
+		"backgroundColor": "#F8F8F8",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"iconPath": "static/icons/component.png",
+				"selectedIconPath": "static/icons/componentHL.png",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/my/index",
+				"iconPath": "static/icons/template.png",
+				"selectedIconPath": "static/icons/templateHL.png",
+				"text": "我的"
+			}
+		]
+	}
+}

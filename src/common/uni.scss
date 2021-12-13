@@ -1,0 +1,117 @@
+@font-face {
+  font-family: "icon";
+  font-weight: normal;
+  font-style: normal;
+  src: url("~@/static/fonts/iconfont.ttf") format("truetype");
+}
+
+.icon {
+  font-family: "icon" !important;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-down-arrows:before {
+  content: "\e6cc";
+}
+
+.icon-right-arrows:before {
+  content: "\e660";
+}
+
+.icon-search:before {
+  content: "\e699";
+}
+
+.icon-gift:before {
+  content: "\e685";
+}
+
+.icon-collect:before {
+  content: "\e601";
+}
+
+.icon-triangle:before {
+  content: "\e602";
+}
+
+.icon-qrcode:before {
+  content: "\e65f";
+}
+
+.icon-dialogue:before {
+  content: "\e620";
+}
+
+.icon-shopping:before {
+  content: "\e73e";
+}
+
+.icon-home:before {
+  content: "\e61f";
+}
+
+.icon-address:before {
+  content: "\e652";
+}
+
+.icon-edit:before {
+  content: "\e6b0";
+}
+
+.icon-send:before {
+  content: "\e6ae";
+}
+
+.icon-card:before {
+  content: "\e621";
+}
+
+.icon-share:before {
+  content: "\e603";
+}
+
+.icon-wenhao:before {
+  content: "\e8ea";
+}
+
+.icon-filter:before {
+  content: "\e888";
+}
+
+.icon-client:before {
+  content: "\e697";
+}
+
+.icon-save:before {
+  content: "\ec09";
+}
+
+.icon-account:before {
+  content: "\e682";
+}
+
+.icon-schroll:before {
+  content: "\e661";
+}
+
+.icon-banned:before {
+  content: "\e608";
+}
+
+.icon-children:before {
+  content: "\e8af";
+}
+
+.icon-firendCircle:before {
+  content: "\e8b4";
+}
+
+.icon-scan:before {
+  content: "\e8b5";
+}
+
+.icon-phone:before {
+  content: "\e8c3";
+}

@@ -1,0 +1,162 @@
+@import "./mixins.scss";
+
+// Prefix
+$prefix: "e";
+$prefix_b: "eb";
+
+// Color
+$primary-color: #02b9cc;
+$info-color: #2db7f5;
+$wx-color: #5dc86c;
+$success-color: #19be6b;
+$processing-color: $primary-color;
+$warning-color: #ff9900;
+$error-color: #ed4014;
+$normal-color: #e6ebf1;
+$link-color: #2d8cf0;
+$link-hover-color: tint($link-color, 20%);
+$link-active-color: shade($link-color, 5%);
+$selected-color: fade($primary-color, 90%);
+$tooltip-color: #fff;
+$subsidiary-color: #808695;
+$rate-star-color: #f5a623;
+$white: #fff;
+$black: #000;
+
+// play 播放按钮的背景色
+$play-bg-color: rgba(0, 0, 0, 0.45);
+
+// font-color
+$font-white-color: #fff;
+$font-black-color: rgba(0, 0, 0, 0.85);
+$font-deep-color: rgba(0, 0, 0, 0.65);
+$font-gray-color: rgba(0, 0, 0, 0.25);
+$font-primary-color: $primary-color;
+
+// font-size
+$font-10: 10 * 2rpx;
+$font-12: 12 * 2rpx;
+$font-14: 14 * 2rpx;
+$font-16: 16 * 2rpx;
+$font-17: 17 * 2rpx;
+$font-18: 18 * 2rpx;
+$font-24: 24 * 2rpx;
+$font-32: 32 * 2rpx;
+$font-28: 28 * 2rpx;
+$font-30: 30 * 2rpx;
+$font-40: 40 * 2rpx;
+$font-48: 48 * 2rpx;
+
+// backgroundColor
+$background-black-color: rgba(0, 0, 0, 0.65);
+$background-gray-color: rgba(0, 0, 0, 0.04);
+$background-white-color: #fff;
+$background-select-color: rgba(2, 185, 204, 0.08);
+
+// border-color
+$border-select-color: rgba(2, 185, 204, 0.08);
+$border-default-color: rgba(0, 0, 0, 0.08);
+
+// button
+$btn-primary-bgColor: $primary-color;
+$btn-default-bgColor: rgba(0, 0, 0, 0.04);
+$btn-default-color: $font-black-color;
+$btn-height: 44 * 2rpx;
+$btn-font-size: $font-16;
+$btn-small-height: 32 * 2rpx;
+$btn-small-height: 32 * 2rpx;
+$btn-small-font-size: $font-14;
+$btn-border-radius: 6 * 2rpx;
+
+// tag
+$tag-default-radius: 4 * 2rpx;
+$tag-primary-color: rgba(2, 186, 204, 0.08);
+$tag-status-color: #ffb519;
+
+// input
+$input-name-color: rgba(0, 0, 0, 0.65);
+$input-placeholder-color: rgba(0, 0, 0, 0.25);
+$input-content-color: $font-black-color;
+$input-content-bg-color: $background-gray-color;
+
+// textarea
+$textarea-placeholder-color: rgba(0, 0, 0, 0.25);
+
+// poptip
+$poptip-bg-color: #646c7a;
+$poptip-badge-color: rgba(0, 0, 0, 0.25);
+$poptip-border-color: rgba(255, 255, 255, 0.25);
+
+// toast
+$toast-default-bg-color: $background-black-color;
+
+// confirm
+$confirm-bg-color: rgba(0, 0, 0, 0.5);
+
+// liveCard组件
+$live-appointment-success-font-color: rgba(255, 255, 255, 0.65);
+$live-play-bg: $play-bg-color;
+$live-type-icon-bg: rgba(0, 0, 0, 0.45);
+$live-bottom-bg: linear-gradient(
+  180deg,
+  rgba(0, 0, 0, 0) 0%,
+  rgba(0, 0, 0, 0.65) 100%
+);
+
+// doctorCard
+$doctor-icon-bg-color: rgba(255, 181, 25, 0.08);
+$doctor-icon-font-color: #ffb519;
+
+// articleCard
+$articleCard-icon-color: rgba(0, 0, 0, 0.45);
+
+// immuneCard
+$immune-bg-color: #fafafa;
+
+// collect
+$collect-btn-bg-color: #d8d8d8;
+$collect-btn-border-color: rgba(0, 0, 0, 0.1);
+
+// integralCard
+$integralCard-bg-img: $primary-color
+  linear-gradient(
+    to top left,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 10%,
+    rgba(255, 255, 255, 0.2) 30%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(255, 255, 255, 0.2) 70%,
+    rgba(255, 255, 255, 0) 100%
+  );
+$integralCard-btn-interval-color: rgba(0, 0, 0, 0.65);
+
+// integralTaskCard
+$integralTaskCard-integral-color: #feab40;
+
+// integralExchangeCard
+$integralExchangeCard-integral-font-color: #ffae40;
+$integralExchangeCard-boxshadow: 0 4 * 2rpx 8 * 2rpx 0 rgba(0, 0, 0, 0.01);
+
+// integralRecordCard
+$integralRecordCard-add-integral-font-color: #ffae40;
+
+// exchangeRecordCard
+$exchangeRecordCard-product-bal-color: #ffae40;
+
+// myPageList
+$myPageList-icon-color: $font-deep-color;
+
+// inquiryCard
+$inquiryCard-pay-color: #ff3030;
+$inquiryCard-inquiring-color: $primary-color;
+$inquiryCard-cancel-color: $font-black-color;
+
+// orderProgress
+$orderProgress-bg-color: #f5f5f5;
+
+// lineDialogueCard
+$lineDialogueCard-new-order-font-color: #ffb519;
+
+// mark
+$mark-default-color: rgba(0, 0, 0, 0.08);
+$mark-choose-color: #ffb519;
