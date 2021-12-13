@@ -1,6 +1,6 @@
 {
 	"name": "uni-app-seed",
-	"appid": "",
+	"appid": "wxfafe16fdd2f5feed",
 	"description": "医药线小程序&H5种子框架",
 	"versionName": "1.0.0",
 	"versionCode": "100",
@@ -22,13 +22,7 @@
 		"setting": {
 			"urlCheck": false
 		},
-		"usingComponents": true,
-		"plugins": {
-			"QCloudTBP": {
-				"version": "1.0.4",
-				"provider": "wx65f00fe52f504192"
-			}
-		}
+		"usingComponents": true
 	},
 	"mp-alipay" : {
         "usingComponents" : true

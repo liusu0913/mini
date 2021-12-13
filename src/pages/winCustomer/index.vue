@@ -132,7 +132,6 @@
 <script>
 import eTab from '../../components/tab/index'
 import { getClient } from '@/api'
-console.log(getClient)
 
 export default {
   components: {
