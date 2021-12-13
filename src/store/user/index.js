@@ -15,7 +15,7 @@ export default {
       title: '前端开发工程师',
       phone: '15811240124'
     },
-    isLogin: true
+    isLogin: false
   },
   mutations: {
     setUserInfo(state, info) {
