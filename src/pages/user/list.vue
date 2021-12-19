@@ -19,7 +19,6 @@
     </div>
     <div class="date">
       <div class="choose-date">
-        日期：
         <p>
           <span
             :class="{active: currentSpell === 7}"
@@ -64,12 +63,10 @@
                 <span>影响人数{{ parseInt(item.affect) }}</span>
               </p>
             </div>
-            <span
+            <img 
               class="phone"
               @click.stop="callPhone(item)"
-            >
-              <span class="icon icon-phone" />
-            </span>
+              src="../../static/img/phone.png">
           </div>
           <p class="bottom">
             <span>{{ item.time }}小时前</span>访问了 {{ item.histroy.join(' ') }}
@@ -189,31 +186,35 @@ export default {
 
 <style lang="scss" scope>
 .box {
-  min-height: 100vh;
-  background-color: #efeff9;
+  box-sizing: border-box;
+  height: 100vh;
+  padding: 0 20rpx;
+  background: url('../../static/img/bg.png') no-repeat;
+  background-size: 100% 100%;
 }
 .date {
   background-color: #fff;
-  padding: 20rpx 20rpx 10rpx;
+  padding: 28rpx 50rpx;
   display: flex;
   .choose-date {
     flex: 1;
     p {
       vertical-align: middle;
       display: inline-block;
-      color: #2e64ed;
-      background-color: #efeff8;
-      line-height: 40rpx;
       border-radius: 30rpx;
       span {
-        font-size: 30rpx;
         display: inline-block;
         padding: 10rpx 40rpx;
-        line-height: 40rpx;
         border-radius: 30rpx;
+        font-size: 22rpx;
+        font-family: Source Han Sans CN, Source Han Sans CN-Regular;
+        font-weight: 400;
+        text-align: center;
+        color: #606060;
+        background-color: #f0f2f6;
       }
       .active {
-        background-color: #2d63f3;
+        background-color: #74cd95;
         color: #fff;
       }
     }
@@ -227,18 +228,21 @@ export default {
 }
 .head {
   position: relative;
-  padding: 0 20rpx;
-  line-height: 80rpx;
+  padding: 0 50rpx;
   background-color: #fff;
-  border-bottom: 2rpx solid #ccc;
+  border-radius: 10rpx 10rpx 0 0 ;
+  overflow: hidden;
   ul, li {
     list-style: none;
     margin: 0;
     padding: 0;
   }
   p {
-    color: #2e63ee;
-    font-size: 30rpx;
+    font-size: 28rpx;
+    font-family: Source Han Sans CN, Source Han Sans CN-Regular;
+    font-weight: 400;
+    color: #606060;
+    line-height: 90rpx;
     .icon {
       margin-left: 20rpx;
     }
@@ -259,19 +263,19 @@ export default {
   }
 }
 .lists {
-  margin-top: 10rpx;
-  padding: 0 20rpx;
+  padding: 20rpx 10rpx 0;
+  background-color: #fff;
   .card {
-    padding: 0 20rpx;
-    background-color: #fff;
-    border-radius: 20rpx;
+    padding: 24rpx 20rpx;
+    border-radius:20rpx;
     margin-bottom: 20rpx;
+    background-color: #f7f9fd;
     .top {
       padding: 20rpx 0;
       display: flex;
       img {
-        width: 90rpx;
-        height: 90rpx;
+        width: 108rpx;
+        height: 108rpx;
         border-radius: 50%;
       }
       .user {
@@ -282,48 +286,46 @@ export default {
           padding: 0;
         }
         .name {
+          display: inline-block;
           font-size: 30rpx;
           color: #494949;
           line-height: 40rpx;
         }
         .tag {
-          vertical-align: top;
+          margin-left: 18rpx;
+          vertical-align: middle;
           display: inline-block;
-          padding: 0rpx 20rpx;
+          padding: 0rpx 22rpx;
           font-size: 20rpx;
-          background-color: #f0f0f0;
-          color: #737373;
+          color: #fff;
           border-radius: 20rpx;
+          line-height: 34rpx;
+          background-color: #76ce96;
         }
         .data {
-          font-size: 24rpx;
+          margin-top: 17rpx;
+          font-size: 20rpx;
           line-height: 30rpx;
+          color: #969696;
           span {
             margin-right: 30rpx;
           }
           .recommend {
-            color: #4968bf;
+            color: #606060;
           }
         }
       }
       .phone {
-        width: 70rpx;
-        height: 70rpx;
-        line-height: 70rpx;
-        text-align: center;
-        border-radius: 50%;
-        background-color: #ecedfa;
-        color: #2967f0;
-        .icon {
-          font-size: 50rpx;
-        }
+        width: 80rpx;
+        height: 80rpx;
+        vertical-align: middle;
       }
     }
     .bottom {
-      font-size: 28rpx;
-      padding: 20rpx 0;
+      font-size: 18rpx;
+      padding: 18rpx 0;
       span {
-        color: #858585;
+        color: #969696;
         margin-right: 16rpx;
       }
     }

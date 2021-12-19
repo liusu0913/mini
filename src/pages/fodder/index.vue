@@ -9,10 +9,9 @@
           {{ currentFodder.title }}
           <span @click="closeDialog">X</span>
         </div>
+        <div class="time">{{ currentFodder.time }}</div>
+
         <div class="content">
-          <div class="time">
-            {{ currentFodder.time }}
-          </div>
           <div class="txt">
             {{ currentFodder.text }}
           </div>
@@ -30,41 +29,43 @@
         </div>
       </div>
     </div>
-    <div class="search">
-      <div class="input">
-        <span
-          class="icon icon-search"
-          @click="beginSearch"
+    <div class="head">
+      <div class="search">
+        <div class="input">
+          <span
+            class="icon icon-search"
+            @click="beginSearch"
+          />
+          <input
+            v-model="filterRules"
+            confirm-type="search"
+            placeholder="请输入内容的标题或者分享文案"
+          >
+        </div>
+      </div>
+      <div class="items">
+        <eTab
+          v-if="!isSearch"
+          :active-tab="currentTab"
+          :tab-list="tabList"
+          @change="chanegTab"
         />
-        <input
-          v-model="filterRules"
-          confirm-type="search"
-          placeholder="请输入内容的标题或者分享文案"
+        <div
+          v-if="!isSearch"
+          class="tags"
         >
+          <span
+            v-for="tag in tags"
+            :key="tag.id"
+            :class="{
+              'tag': true,
+              'active': tag.id === currentChooseTag
+            }"
+            @click="changeTag(tag)"
+          >{{ tag.title }}</span>
+        </div>
       </div>
-    </div>
-    <div class="items">
-      <eTab
-        v-if="!isSearch"
-        :active-tab="currentTab"
-        :tab-list="tabList"
-        @change="chanegTab"
-      />
-      <div
-        v-if="!isSearch"
-        class="tags"
-      >
-        <span
-          v-for="tag in tags"
-          :key="tag.id"
-          :class="{
-            'tag': true,
-            'active': tag.id === currentChooseTag
-          }"
-          @click="changeTag(tag)"
-        >{{ tag.title }}</span>
-      </div>
-    </div>
+    </div>   
     <div class="list">
       <mescroll-body
         ref="mescrollRef"
@@ -77,19 +78,18 @@
           :key="index"
           class="card"
         >
-          <view class="head">
-            <span class="title">{{ item.title }}</span>
-            <span class="time">{{ item.time }}</span>
-          </view>
           <view class="content">
-            {{ item.text }}
+            <view class="card-head">
+              <span class="title">{{ item.title }}</span>
+              <span class="time">{{ item.time }}</span>
+            </view>
+            <view class="txt">{{ item.text }}</view>
           </view>
           <view
             class="foot"
             @click="openDialog(item)"
           >
-            <span class="icon icon-save" />
-            <p>保存全部资料</p>
+            <img src="../../static/img/go.png" alt="">
           </view>
         </view>
       </mescroll-body>
@@ -258,7 +258,9 @@ export default {
 <style lang="scss">
 .customer-box {
   padding: 20rpx 20rpx 0;
-  background-color: #efeff9;
+  background: url('../../static/img/bg.png') no-repeat;
+  background-size: 100% 100%;
+  height: 100vh;
 }
 .dialog {
   width: 100vw;
@@ -270,37 +272,46 @@ export default {
   z-index: 9999;
   .box {
     position: absolute;
-    left: 20rpx;
-    right: 20rpx;
+    left: 68rpx;
+    right: 68rpx;
     top: 50%;
+    padding: 38rpx 0;
     transform: translateY(-50%);
     background-color: #fff;
     padding-bottom: 30rpx;
     border-radius: 10rpx;
+    .time {
+      padding: 20rpx 45rpx;
+      color: #99999d;
+      font-size: 20rpx;
+      border-bottom: 2rpx  solid #ccc;
+    }
     .tit {
-      line-height: 80rpx;
-      padding: 0 20rpx;
-      font-size: 36rpx;
-      color: black;
-      border-bottom: 1rpx solid #ccc;
+      width: 500rpx;
+      box-sizing: border-box;
+      padding: 0 45rpx;
+      font-size: 30rpx;
+      color: #111110;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
       span {
-        float: right;
+        position: absolute;
+        top: 38rpx;
+        right: 45rpx;
       }
     }
     .content {
-      padding: 0 20rpx;
-      .time {
-        color: #99999d;
-        font-size: 24rpx;
-        line-height: 80rpx;
-      }
+      padding: 34rpx 45rpx;
       .txt {
-        font-size: 30rpx;
-        line-height: 40rpx;
+        font-size: 22rpx;
+        line-height: 30rpx;
+        color: #606060;
       }
       .source {
-        color: #99999d;
-        font-size: 24rpx;
+        color: #606060;
+        font-size: 22rpx;
         line-height: 80rpx;
       }
     }
@@ -308,7 +319,7 @@ export default {
       text-align: center;
       button {
         display: inline-block;
-        background-color: #4b72ec;
+        background-color: #71cb95;
         border: none;
         padding:0 50rpx;
         font-size: 30rpx;
@@ -321,80 +332,99 @@ export default {
   }
 }
 .list {
-  margin-top: 30rpx;
+  margin-top: 24rpx;
+  background-color: #fff;
   .card {
-    background-color: #fff;
+    display: flex;
     border-radius: 20rpx;
-    margin-bottom: 20rpx;
-    padding: 0 20rpx;
-    .head {
-      display: flex;
-      line-height: 80rpx;
-      border-bottom: 1rpx solid #ccc;
-      .title {
-        flex: 1;
-        font-size: 34rpx;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .time {
-        margin-left: 30rpx;
-        font-size: 20rpx;
-      }
-    }
+    padding: 36rpx 49rpx;
+    background-color: #f7f9fd;
+    margin-bottom: 15rpx;
     .content {
-      margin: 30rpx 0;
-      font-size: 40rpx;
-      line-height: 50rpx;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 4;
-      overflow: hidden;
+      width: 453rpx;
+      flex: 1;
+      .txt {
+        color: #606060;
+        font-size: 22rpx;
+        line-height: 50rpx;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+      }
+      .card-head {
+        display: flex;
+        line-height: 80rpx;
+        .title {
+          flex: 1;
+          font-size: 28rpx;
+          font-weight: bold;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          color: #111110;
+        }
+        .time {
+          margin-left: 30rpx;
+          font-size: 20rpx;
+          color: #969696;
+        }
+      }
     }
     .foot {
-      border-top: 1px solid #ccc;
-      padding: 0rpx 20rpx 20rpx;
-      text-align: center;
-      font-size: 24rpx;
-      line-height: 30rpx;
-      .icon {
-        font-size: 40rpx;
-        line-height: 70rpx;
+      width: 22px;
+      padding: 0 16px;
+      position: relative;
+      img {
+        width: 22px;
+        vertical-align: top;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
       }
     }
   }
+}
+.head {
+  background-color: #fff;
+  padding: 34rpx 15rpx 0rpx;
+  border-radius: 10rpx;
 }
 .items {
   background-color: #fff;
   border-radius: 10rpx;
   overflow: hidden;
   .tags {
-    padding: 20rpx 0;
+    margin-top: 35rpx;
     font-size: 0;
     .tag {
+      vertical-align: top;
+      box-sizing: border-box;
       display: inline-block;
-      font-size: 20rpx;
-      line-height: 30rpx;
-      padding: 10rpx 30rpx;
-      background-color: #efeff9;
-      color: #000;
-      margin:0 0 20rpx 20rpx;
-      border-radius: 10rpx;
+      font-size: 22rpx;
+      line-height: 54rpx;
+      padding: 0 30rpx;
+      min-width: 150rpx;
+      text-align: center;
+      color: #969696;
+      margin-right: 15rpx;
+      margin-bottom: 18rpx;
+      border-radius: 30rpx;
+      background-color: #c5efe0;
     }
     .active {
-      background-color: #008dce;
+      background-color: #6fca95;
       color: #fff;
     }
   }
 
 }
 .search {
-  background-color: #fff;
-  padding: 20rpx;
-  margin-bottom: 30rpx;
+  background-color: #f7f9fd;
   border-radius: 10rpx;
+  margin: 0 25rpx 26rpx;
   display: flex;
+  overflow: hidden;
   .input {
     flex: 1;
     position: relative;
@@ -402,16 +432,17 @@ export default {
       position: absolute;
       top: 0;
       left: 20rpx;
-      font-size: 40rpx;
+      font-size: 50rpx;
       font-weight: bold;
-      line-height: 70rpx;
+      line-height: 94rpx;
+      color: #6ec995;
     }
     input {
-      font-size: 30rpx;
-      padding-left: 70rpx;
-      height: 70rpx;
+      height: 94rpx;
+      line-height: 94rpx;
+      font-size: 28rpx;
+      padding-left: 80rpx;
       background-color: #efeff9;
-      border-radius: 40rpx;
     }
   }
   .collect {

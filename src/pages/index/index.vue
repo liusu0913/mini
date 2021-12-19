@@ -11,21 +11,10 @@
           <div class="intr">
             <p class="name">
               {{ info.name }}
-              <span
-                class="icon icon-edit"
-                @click="editUser"
-              />
             </p>
             <p class="title">
               {{ info.title }}
             </p>
-          </div>
-          <div class="handle">
-            <span
-              class="icon icon-scan"
-              @click="scanCode"
-            />
-            <span class="icon icon-qrcode" />
           </div>
         </div>
       </header>
@@ -42,58 +31,52 @@
           <p>今日排名</p>
           <span>{{ boardData.rank }}</span>
         </div>
-        <span class="icon icon-wenhao search" />
       </div>
       <ul class="nav">
-        <li @click="goWinCustomer('儿童')">
-          <span class="icon icon-schroll" />
+        <li @click="goWinCustomer(0)">
+          <img src="../../static/img/nav-1.png" alt="">
           <p>儿童</p>
         </li>
-        <li @click="goWinCustomer('青少年')">
-          <span class="icon icon-gift" />
+        <li @click="goWinCustomer(1)">
+          <img src="../../static/img/nav-2.png" alt="">
           <p>青少年</p>
         </li>
-        <li @click="goWinCustomer('中青年')">
-          <span class="icon icon-shopping" />
+        <li @click="goWinCustomer(2)">
+          <img src="../../static/img/nav-3.png" alt="">
           <p>中青年</p>
         </li>
-        <li @click="goWinCustomer('老年')">
-          <span class="icon icon-account" />
+        <li @click="goWinCustomer(3)">
+          <img src="../../static/img/nav-4.png" alt="">
           <p>老年</p>
         </li>
-        <li @click="goFodderPage(1)">
-          <span class="icon icon-firendCircle" />
-          <p>朋友圈</p>
-        </li>
-        <li @click="goFodderPage(2)">
-          <span class="icon icon-dialogue" />
-          <p>营销话术</p>
-        </li>
       </ul>
+      <div class="fodder">
+        <img @click="goFodderPage(2)" src="../../static/img/fodder-1.png" alt="">
+        <img @click="goFodderPage(1)" src="../../static/img/fodder-2.png" alt="">
+      </div>
       <div class="tips">
         <p class="title">
           最新提醒
-          <span class="icon icon-wenhao search" />
         </p>
         <div class="content">
           <div
             class="item"
             @click="goSendMorePage(0)"
           >
-            <img src="../../static/icons/client.png">
+            <img src="../../static/img/tips-1.png">
             <div class="data">
-              <p><i>{{ sopTips.unreadCount }}</i>/{{ sopTips.allCount }}<span class="icon icon-triangle" /></p>
-              <p>群SOP提醒</p>
+              <p>群发提醒</p>
+              <p class="num"><i>{{ sopTips.unreadCount }}</i>/{{ sopTips.allCount }}</p>
             </div>
           </div>
           <div
             class="item"
             @click="goSendMorePage(1)"
           >
-            <img src="../../static/icons/friend.png">
+            <img src="../../static/img/tips-2.png">
             <div class="data">
-              <p><i>{{ friendTips.unreadCount }}</i>/{{ friendTips.allCount }}<span class="icon icon-triangle" /></p>
               <p>朋友圈发送提醒</p>
+              <p class="num"><i>{{ friendTips.unreadCount }}</i>/{{ friendTips.allCount }}</p>
             </div>
           </div>
         </div>
@@ -241,26 +224,25 @@ export default {
 
 <style lang="scss">
 .index-box {
-  background-color: #efeff9;
   height: 100vh;
+  background: url('../../static/img/home-bg.png') no-repeat;
+  background-size: 100% 100%;
 }
 .user {
-  background-color: #2f63ef;
-  padding: 50rpx 30rpx;
+  padding: 60rpx 39rpx;
   .intr {
     display: inline-block;
-    margin-left: 20rpx;
+    margin-left: 30rpx;
+    margin-top: 34rpx;
     p {
-      line-height: 40rpx;
-      margin: 0;
-      padding: 0;
-      font-size: 30rpx;
+      font-size: 44rpx;
+      font-weight: 500;
       color: #fff;
-      .icon {
-        margin-left: 20rpx;
-        font-size: 30rpx;
-        line-height: 40rpx;
-      }
+      line-height: 50rpx;
+    }
+    .title {
+      font-size: 24rpx;
+      line-height: 30rpx;
     }
   }
   .handle {
@@ -274,18 +256,17 @@ export default {
   }
   img {
     vertical-align: top;
-    width: 80rpx;
-    height: 80rpx;
-    background-color: #fff;
-    border-radius: 10rpx;
+    width: 148rpx;
+    height: 148rpx;
+    border-radius: 50%;
   }
 }
 .board {
   position: relative;
   border-radius: 10rpx;
-  margin: 20rpx 0;
+  margin: 0 20rpx;
   background-color: #fff;
-  padding: 30rpx;
+  padding: 56rpx 0 90rpx;
   display: flex;
   .search {
     line-height: 50rpx;
@@ -304,24 +285,26 @@ export default {
     flex: 1;
     text-align: center;
     p {
-      font-size: 40rpx;
-      color: #b2b2b5;
+      font-size: 24rpx;
+      color: #5f5f5f;
+      margin-bottom: 22rpx;
     }
     span {
       color: #000;
-      font-size: 80rpx;
+      font-size: 74rpx;
       font-weight: bold;
+      color: #5dc096;
     }
     .data {
       margin-left: 30rpx;
       display: inline-block;
       i {
         position: relative;
-        line-height: 40rpx;
-        font-size: 20rpx;
+        line-height: 24rpx;
+        font-size: 18rpx;
         display: block;
         font-style: normal;
-        color: #b2b2b2;
+        color: #969696;
         span {
           display: inline-block;
         }
@@ -332,121 +315,94 @@ export default {
         top: 60%;
         right: -30rpx;
         transform: translateY(-50%);
-        border: 12rpx solid transparent;
+        border: 10rpx solid transparent;
         border-top-color: #35baa0;
       }
       .up::after {
         content: '';
         position: absolute;
-        top: 40%;
+        top: 25%;
         right: -30rpx;
         transform: translateY(-50%);
-        border: 12rpx solid transparent;
+        border: 10rpx solid transparent;
         border-bottom-color: #35baa0;
       }
     }
-
-  }
-  .ranking::after {
-    content: '';
-    position: absolute;
-    width: 2rpx;
-    height: 100%;
-    left: 0;
-    top: 0;
-    background-color: #ccc;
   }
 }
 .nav {
   margin: 0;
-  padding: 30rpx 0;
+  padding: 0;
   list-style: none;
   font-size: 0;
   background-color: #fff;
   border-radius: 10rpx;
+  text-align: center;
+  margin-bottom: 72rpx;
   li {
+    vertical-align: top;
     display: inline-block;
-    font-size: 30rpx;
-    margin: 0;
-    padding: 0;
+    font-size: 26rpx;
     width: 25%;
-    text-align: center;
     margin-bottom: 60rpx;
-    .icon {
-      font-size: 80rpx;
-      color: #404040;
+    img {
+      height: 80rpx;
     }
     p {
-      color: #535353;
-      margin-top: 20rpx;
+      color: #5f5f5f;
+      margin-top: 27rpx;
     }
   }
 }
+.fodder {
+  padding: 0 38rpx;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 59rpx;
+  img {
+    width: 329rpx;
+    height: 163rpx;
+  }
+}
 .tips {
-  border-radius: 10rpx;
-  margin: 20rpx 0;
-  background-color: #fff;
-  padding: 30rpx;
+  padding: 0 30rpx;
   .title {
     position: relative;
     width: 100%;
-    height: 40rpx;
     line-height: 40rpx;
     font-size: 30rpx;
-    .search {
-      line-height: 50rpx;
-      position: absolute;
-      top: 0rpx;
-      right: -30rpx;
-      width: 50rpx;
-      text-align: center;
-      font-weight: bold;
-      color: #3d64d9;
-      border-radius: 25rpx 0 0 25rpx;
-      background-color: #dee8fd;
-    }
+    text-align: left;
+    color: #10110f;
+    margin-bottom: 60rpx;
   }
   .content {
     position: relative;
     display: flex;
-    padding: 20rpx 0 20rpx;
-    margin-top: 30rpx;
     .item {
       flex: 1;
       padding: 0 20rpx;
       display: flex;
       img {
-        width: 100rpx;
-        height: 100rpx;
+        height: 84rpx;
         margin-right: 20rpx;
       }
       .data {
-        line-height: 50rpx;
         font-size: 26rpx;
+        text-align: left;
+        color: #5f5f5f;
+        .num {
+          font-size: 48rpx;
+          color: #8b919b;
+          font-weight: bold;
+        }
         i {
           display: inline-block;
           font-style: normal;
-          color: #406ace;
-          line-height: 50rpx;
-        }
-        .icon {
-          margin-left: 10rpx;
-          font-size: 26rpx;
-          line-height: 50rpx;
+          color: #6eb998;;
         }
       }
 
     }
   }
-  .content::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    margin-left: -1rpx;
-    height: 100rpx;
-    width: 2rpx;
-    background-color: #ccc;
-  }
-
 }
 </style>

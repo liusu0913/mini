@@ -21,7 +21,7 @@
             <image
               v-if="!customTabColor"
               class="public"
-              :src="themeId === 0 ? publicBaseImg : privateBaseImg"
+              src="../../static/img/line.png"
               mode=""
             />
             <view
@@ -58,7 +58,7 @@
               <image
                 v-if="!customTabColor"
                 class="more-public"
-                :src="themeId === 0 ? publicBaseImg : privateBaseImg"
+                src="../../static/img/line.png"
                 mode=""
               />
               <view
@@ -71,7 +71,6 @@
         </view>
       </scroll-view>
     </view>
-    <view class="line1rpx" />
   </view>
 </template>
 

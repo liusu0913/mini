@@ -64,9 +64,9 @@
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "医药线小程序&H5同构种子",
-		"navigationBarBackgroundColor": "#2f63ef",
-		"backgroundColor": "#2f63ef"
+		"navigationBarTitleText": "医药线小程序",
+		"navigationBarBackgroundColor": "#54bf8b",
+		"backgroundColor": "#54bf8b"
 	},
 	"tabBar": {
 		"color": "#7A7E83",

@@ -1,95 +1,107 @@
 <template>
-  <view class="client">
-    <e-tab
-      :active-tab="currentTab"
-      :tab-list="tabList"
-      @change="chanegTab"
-    />
-    <view class="content">
-      <ul
-        v-if="currentTab === 0"
-        class="nav"
-      >
-        <li @click="goUserListPage(0)">
-          <div class="flag one">
-            推荐
-          </div>
-          <span class="txt">推荐跟进用户</span>
-          <span class="icon"> ></span>
-        </li>
-        <li @click="goUserListPage(1)">
-          <div class="flag two">
-            推荐
-          </div>
-          <span class="txt">推荐跟进用户</span>
-          <span class="icon"> ></span>
-        </li>
-        <li @click="goUserListPage(2)">
-          <div class="flag three">
-            推荐
-          </div>
-          <span class="txt">推荐跟进用户</span>
-          <span class="icon"> ></span>
-        </li>
-      </ul>
-      <view
-        v-if="currentTab === 1"
-        class="list"
-      >
-        <div class="search">
-          <div class="input">
-            <span
-              class="icon icon-search"
-              @click="beginSearch"
-            />
-            <input
-              v-model="filterRules"
-              confirm-type="search"
-              placeholder="请输入用户名称"
-            >
-          </div>
-        </div>
-        <div class="head">
-          <p @click="clickChoseTime">
-            {{ timeChooseMap[currentChooseTime] }}
-            <span
-              class="icon icon-down-arrows"
-            />
-          </p>
-          <ul v-if="timeChooseShow">
-            <li
-              v-for="(item, index) in timeChooseMap"
-              :key="index"
-              @click="chooseFilterTime(index)"
-            >
-              {{ item }}
-            </li>
-          </ul>
-        </div>
-        <mescroll-body
-          ref="mescrollRef"
-          :down="downOption"
-          @init="mescrollInit"
-          @up="getUserList"
+  <view class="container">
+    <view class="client">
+      <e-tab
+        :active-tab="currentTab"
+        :tab-list="tabList"
+        @change="chanegTab"
+      />
+      <view class="content">
+        <ul
+          v-if="currentTab === 0"
+          class="nav"
         >
-          <view
-            v-for="item in userList"
-            :key="item.id"
-            class="card"
-            @click="goUserInfoPage(item)"
+          <li @click="goUserListPage(0)">
+            <img class="icon" src="../../static/img/client3.png" alt="">
+            <span class="txt">推荐跟进用户</span>
+            <img class="go" src="../../static/img/go.png" alt="">
+          </li>
+          <li @click="goUserListPage(1)">
+            <img class="icon" src="../../static/img/client2.png" alt="">
+            <span class="txt">推荐跟进用户</span>
+            <img class="go" src="../../static/img/go.png" alt="">
+          </li>
+          <li @click="goUserListPage(2)">
+            <img class="icon" src="../../static/img/client1.png" alt="">
+            <span class="txt">推荐跟进用户</span>
+            <img class="go" src="../../static/img/go.png" alt="">
+          </li>
+        </ul>
+        <view
+          v-if="currentTab === 1"
+          class="list"
+        >
+          <div class="search">
+            <div class="input">
+              <span
+                class="icon icon-search"
+                @click="beginSearch"
+              />
+              <input
+                v-model="filterRules"
+                confirm-type="search"
+                placeholder="请输入用户名称"
+              >
+            </div>
+          </div>
+          <div class="head">
+            <p @click="clickChoseTime">
+              {{ timeChooseMap[currentChooseTime] }}
+              <span
+                class="icon icon-down-arrows"
+              />
+            </p>
+            <ul v-if="timeChooseShow">
+              <li
+                v-for="(item, index) in timeChooseMap"
+                :key="index"
+                @click="chooseFilterTime(index)"
+              >
+                {{ item }}
+              </li>
+            </ul>
+          </div>
+          <mescroll-body
+            ref="mescrollRef"
+            :down="downOption"
+            @init="mescrollInit"
+            @up="getUserList"
           >
-            <img :src="item.img">
-            <view class="user">
-              <p class="name">
-                {{ item.name }}
-                <span>{{ item.tag }}</span>
+            <div
+              v-for="(item, i) in userList"
+              :key="i"
+              class="card"
+              @click="goUserInfoPage(item)"
+            >
+              <div class="top">
+                <img
+                  :src="item.img"
+                  alt=""
+                >
+                <div class="user">
+                  <p class="name">
+                    {{ item.name }}
+                  </p>
+                  <p class="tag">
+                    {{ item.tag }}
+                  </p>
+                  <p class="data">
+                    <span class="recommend">推荐度{{ parseInt(item.recommend) }}%</span>
+                    <span>活跃度{{ parseInt(item.active) }}%</span>
+                    <span>影响人数{{ parseInt(item.affect) }}</span>
+                  </p>
+                </div>
+                <img 
+                  class="phone"
+                  @click.stop="callPhone(item)"
+                  src="../../static/img/phone.png">
+              </div>
+              <p class="bottom">
+                <span>{{ item.time }}小时前</span>访问了 {{ item.histroy.join(' ') }}
               </p>
-              <p class="last-time">
-                最后访问时间：{{ item.lastTime }}
-              </p>
-            </view>
-          </view>
-        </mescroll-body>
+            </div>
+          </mescroll-body>
+        </view>
       </view>
     </view>
   </view>
@@ -138,6 +150,11 @@ export default {
     }
   },
   methods: {
+    callPhone(item) {
+      uni.makePhoneCall({
+        phoneNumber: `${item.phone}` // 仅为示例
+      })
+    },
     goUserInfoPage(item) {
       uni.navigateTo({
         url: `/pages/user/info?id=${item.id}`
@@ -204,25 +221,51 @@ export default {
 </script>
 
 <style lang="scss" scope>
+.container {
+  background: url('../../static/img/bg.png') no-repeat;
+  background-size: 100% 100%;
+  padding: 0 15rpx;
+  height: 100vh;
+}
 .client {
-  min-height: 100vh;
-  background-color: #efeff9;
+  height: 100%;
+  background-color: #fff;
+  border-radius: 10rpx;
+  overflow: hidden;
+  padding: 0 10rpx;
   .nav {
     list-style: none;
     margin: 0;
     padding: 0;
-    padding: 0 20rpx;
-    .txt {
-      flex: 1;
-    }
+    margin-top: 40rpx;
     li {
       display: flex;
       margin: 0;
       padding: 0;
-      margin-top: 30rpx;
-      padding: 50rpx;
-      background-color: #fff;
-      line-height: 100rpx;
+      background-color: #f7f9fd;
+      line-height: 74rpx;
+      padding: 42rpx 54rpx;
+      margin-bottom: 20rpx;
+      border-radius: 10rpx;
+      .icon {
+        width: 74rpx;
+        height: 74rpx;
+        vertical-align: top;
+        margin-right: 33rpx;
+      }
+      .go {
+        vertical-align: top;
+        width: 22rpx;
+        height: 37rpx;
+        margin-top: 18rpx;
+      }
+      .txt {
+        flex: 1;
+        font-size: 28rpx;
+        font-weight: 400;
+        text-align: left;
+        color: #606060;
+      }
       .flag {
         text-align: center;
         width: 100rpx;
@@ -257,8 +300,10 @@ export default {
     padding: 0;
   }
   p {
-    color: #2e63ee;
-    font-size: 30rpx;
+    font-size: 28rpx;
+    font-family: Source Han Sans CN, Source Han Sans CN-Regular;
+    font-weight: 400;
+    color: #606060;
     .icon {
       margin-left: 20rpx;
     }
@@ -280,10 +325,11 @@ export default {
   }
 }
 .search {
-  background-color: #fff;
-  padding: 20rpx;
+  margin: 40rpx;
+  background-color: #f7f9fd;
   border-radius: 10rpx;
   display: flex;
+  overflow: hidden;
   .input {
     flex: 1;
     position: relative;
@@ -291,16 +337,17 @@ export default {
       position: absolute;
       top: 0;
       left: 20rpx;
-      font-size: 40rpx;
+      font-size: 50rpx;
       font-weight: bold;
-      line-height: 70rpx;
+      line-height: 94rpx;
+      color: #6ec995;
     }
     input {
-      font-size: 30rpx;
-      padding-left: 70rpx;
-      height: 70rpx;
+      height: 94rpx;
+      line-height: 94rpx;
+      font-size: 28rpx;
+      padding-left: 80rpx;
       background-color: #efeff9;
-      border-radius: 40rpx;
     }
   }
   .collect {
@@ -314,39 +361,70 @@ export default {
       margin-right: 10rpx;
     }
   }
+
 }
 .card {
-  padding: 30rpx 20rpx;
-  display: flex;
-  background-color: #fff;
-  border-bottom: 2rpx solid #efeff9;
-  img {
-    width: 100rpx;
-    height: 100rpx;
-    border-radius: 50%;
-    margin-right: 20rpx;
-  }
-  .user {
-    flex: 1;
-    .name {
-      width: 100%;
-      font-size: 40rpx;
-      color: #000;
-      overflow:hidden; //超出的文本隐藏
-      text-overflow:ellipsis; //溢出用省略号显示
-      white-space:nowrap;
-      span {
-        margin-left: 20rpx;
-        font-size: 26rpx;
-        padding: 6rpx 10rpx;
-        background-color: #f0f0f0;
-        color: #a3a3a3;
-        border-radius: 10rpx;
+  padding: 24rpx 20rpx;
+  border-radius:20rpx;
+  margin-bottom: 20rpx;
+  background-color: #f7f9fd;
+  .top {
+    padding: 20rpx 0;
+    display: flex;
+    img {
+      width: 108rpx;
+      height: 108rpx;
+      border-radius: 50%;
+    }
+    .user {
+      flex: 1;
+      margin-left: 20rpx;
+      p {
+        margin: 0;
+        padding: 0;
+      }
+      .name {
+        display: inline-block;
+        font-size: 30rpx;
+        color: #494949;
+        line-height: 40rpx;
+      }
+      .tag {
+        margin-left: 18rpx;
+        vertical-align: middle;
+        display: inline-block;
+        padding: 0rpx 22rpx;
+        font-size: 20rpx;
+        color: #fff;
+        border-radius: 20rpx;
+        line-height: 34rpx;
+        background-color: #76ce96;
+      }
+      .data {
+        margin-top: 17rpx;
+        font-size: 20rpx;
+        line-height: 30rpx;
+        color: #969696;
+        span {
+          margin-right: 30rpx;
+        }
+        .recommend {
+          color: #606060;
+        }
       }
     }
-    .last-time {
-      font-size: 30rpx;
-      color: #a9a9a9;
+    .phone {
+      width: 80rpx;
+      height: 80rpx;
+      vertical-align: middle;
+    }
+  }
+  .bottom {
+    font-size: 18rpx;
+    padding: 18rpx 0;
+    span {
+      color: #969696;
+      margin-right: 16rpx;
     }
   }
 }

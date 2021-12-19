@@ -44,37 +44,51 @@
           placeholder="请输入内容的标题或者分享文案"
         >
       </div>
-      <div
-        class="collect"
-        @click="filterMyCollect"
-      >
-        <span class="icon icon-filter" />
-        <span>{{ !isFilterCollect ? '仅看收藏' : '查看全部' }}</span>
-      </div>
     </div>
     <div class="items">
       <eTab
         v-if="!isSearch"
-        :active-tab="tabList.indexOf(currentTab)"
+        :active-tab="currentTab"
         :tab-list="tabList"
         @change="chanegTab"
       />
       <div
         v-if="!isSearch"
-        class="tags"
+        class="one-tags"
       >
         <span
-          v-for="tag in tags"
+          v-for="tag in oneTags"
           :key="tag.id"
           :class="{
             'tag': true,
-            'active': tag.id === currenstChooseTag
+            'active': tag.id === currentOneTag
           }"
-          @click="changeTag(tag)"
-        >{{ tag.text }}</span>
+          @click="changeOneTag(tag)"
+        >{{ tag.title }}</span>
       </div>
-      <ul class="list">
-        <li
+      <div
+        v-if="!isSearch"
+        class="two-tags"
+      >
+        <span
+          v-for="tag in twoTags"
+          :key="tag.id"
+          :class="{
+            'tag': true,
+            'active': tag.id === currentTwoTag
+          }"
+          @click="changeTwoTag(tag)"
+        >{{ tag.title }}</span>
+      </div>
+      <mescroll-body
+        ref="mescrollRef"
+        :down="downOption"
+        @init="mescrollInit"
+        @up="getActiveList"
+        class="list"
+      >
+        <div
+          class="item"
           v-for="item in activeList"
           :key="item.id"
         >
@@ -105,60 +119,72 @@
                 >{{ tag }}</span>
               </p>
             </div>
-          </div>
-          <div class="foote">
-            <p
-              :class="{ active: item.collect}"
-              @click="collectItem(item)"
-            >
-              <span :class="{icon: true, 'icon-collect': true, }" />
-              {{ !item.collect ? '收藏' : '取消收藏' }}
-            </p>
-            <p>
-              <span class="icon icon-account" />
-              数据
-            </p>
-            <p @click="sharePeople">
-              <span class="icon icon-share" />
-              分享
+            <p class="share-icon" @click.stop="sharePeople">
+              <img src="../../static/img/share.png" alt="">
+              <span>分享</span>
             </p>
           </div>
-        </li>
-      </ul>
+        </div>
+      </mescroll-body>
     </div>
   </div>
 </template>
 
 <script>
+import MescrollMixin from '@/uni_modules/mescroll-uni/components/mescroll-uni/mescroll-mixins.js'
+import mescrollBody from '@/uni_modules/mescroll-uni/components/mescroll-body/mescroll-body'
 import eTab from '../../components/tab/index'
 import { getClient } from '@/api'
 
 export default {
   components: {
-    eTab
+    eTab,
+    mescrollBody
   },
+  mixins: [MescrollMixin],
   onShow() {
     const pagearr = getCurrentPages()// 获取应用页面栈
     const currentPage = pagearr[pagearr.length - 1]// 获取当前页面信息
-    this.currentTab = currentPage.options.tab
+    this.currentTab = Number(currentPage.options.tab) 
   },
   data() {
     return {
+      isLoading: false,
+      downOption: {
+        use: false,
+        auto: false,
+        textNoMore: '--- 到底了 ---'
+      },
+      listCount: 20,
       pagesize: 20,
       offset: 0,
       isSearch: false,
       filterRules: '',
       currentChooseTime: '0',
-      currenstChooseTag: 'all',
-      currentTab: '青少年',
+      currentOneTag: 0,
+      currentTwoTag: -1,
+      currentTab: 0,
       isFilterCollect: false,
-      tags: [],
+      oneTags: [ {
+        id: 0,
+        title: '皮肤'
+      }, {
+        id: 1,
+        title: '牙齿'
+      }, {
+        id: 2,
+        title: '眼睛'
+      }, {
+        id: 3,
+        title: '头发'
+      }],
+      twoTags: [],
       activeList: [],
       tabList: [
-        '儿童',
-        '青少年',
-        '中青年',
-        '老年'
+        {key: 0, title: '儿童'},
+        {key: 1, title: '青少年'},
+        {key: 2, title: '中青年'},
+        {key: 3, title: '老年'}
       ],
       activeData: {
         allNum: 0,
@@ -204,16 +230,8 @@ export default {
       })
     },
     initPage() {
-      getClient.getTags({
-        tab: this.currentTab
-      }).then(data => {
-        this.tags = data.list
-        this.tags.unshift({
-          id: 'all', text: '全部'
-        })
-      })
+      this.getTwoTags()
       this.getActiveData()
-      this.getActiveList()
     },
     getActiveData() {
       getClient.getActiveData({
@@ -222,13 +240,24 @@ export default {
         this.activeData = data
       })
     },
-    changeTag(tag) {
-      this.currenstChooseTag = tag.id
+    changeOneTag(tag) {
+      this.currentOneTag = tag.id
+      this.offset = 0
+      this.activeList = []
+      this.getTwoTags()
+      this.getActiveList()
+    },
+    changeTwoTag(tag) {
+      this.currentTwoTag = tag.id
+      this.offset = 0
+      this.activeList = []
       this.getActiveList()
     },
     chanegTab(index) {
-      this.currentTab = this.tabList[index]
-      this.currenstChooseTag = 'all'
+      this.currentTab = index
+      this.offset = 0
+      this.activeList = []
+      this.getTwoTags()
       this.getActiveList()
     },
     changeTime(item) {
@@ -236,22 +265,14 @@ export default {
       this.getActiveData()
     },
     beginSearch() {
-      if (this.filterRules) {
-        this.isSearch = true
-        this.getActiveList()
-      }
-    },
-    filterMyCollect() {
-      // 处理数据或者收藏的文章
-      if (this.isFilterCollect) {
-        this.getActiveList()
-      } else {
-        const arr = this.activeList.filter((item) => { return item.collect })
-        this.activeList = arr
-      }
-      this.isFilterCollect = !this.isFilterCollect
+      this.isSearch = true
+      this.offset = 0
+      this.activeList = []
+      this.getActiveList()
     },
     getActiveList() {
+      if (this.isLoading || this.activeList.length === this.listCount) return
+      this.isLoading = true
       const sendData = {
         pagesize: this.pagesize,
         offset: this.offset
@@ -259,18 +280,41 @@ export default {
       if (this.isSearch) {
         sendData.search = this.filterRules
       } else {
-        sendData.tab = this.currentTab
-        sendData.tag = this.currenstChooseTag
+        sendData.tab = this.tabList[this.currentTab].key 
+        sendData.tag = this.currentOneTag
+        if (this.currentTwoTag !== -1) {
+          sendData.twoTag = this.currentTwoTag
+        }
       }
       getClient.getActiveList(sendData).then(data => {
         if (data.list) {
-          this.activeList = data.list
+          if (this.offset) {
+            this.activeList = this.activeList.concat(data.list)
+          } else {
+            this.activeList = data.list
+          }
+          this.listCount = data.count
+          this.offset += this.pagesize
+          this.isLoading = false
+          this.mescroll.endSuccess(this.activeList.length, this.activeList.length !== this.listCount) // 必传参数(当前页的数据个数, 是否有下一页true/false)
         }
       })
-      console.log(sendData)
     },
-    collectItem(item) {
-      item.collect = !item.collect
+    getTwoTags() {
+      // 先初始化在请求
+      this.currentTwoTag = -1
+      getClient.getTags({
+        tabId: this.currentTab,
+        tagId: this.currentOneTag
+      }).then(data => {
+        if (data.list) {
+          this.twoTags = data.list
+          this.twoTags.unshift({
+            id: -1,
+            title: '全部'
+          })
+        }
+      })
     }
   }
 }
@@ -278,60 +322,113 @@ export default {
 
 <style lang="scss">
 .customer-box {
-  padding: 20rpx 20rpx 0;
-  background-color: #efeff9;
+  box-sizing: border-box;
   height: 100vh;
+  background: url('../../static/img/bg.png') no-repeat;
+  background-size: 100% 100%;
+  padding-top: 30rpx;
 }
 .items {
   background-color: #fff;
   border-radius: 10rpx;
   overflow: hidden;
-  .tags {
-    padding: 20rpx 0;
+  .one-tags, .two-tags {
+    min-height: 100%;
+    padding: 32rpx 34rpx;
     font-size: 0;
+    white-space: nowrap;
+    overflow: auto;
+    border-bottom: 1px solid #efeff9;
     .tag {
+      vertical-align: top;
+      box-sizing: border-box;
       display: inline-block;
-      font-size: 20rpx;
-      line-height: 30rpx;
-      padding: 10rpx 30rpx;
-      background-color: #efeff9;
-      color: #000;
-      margin:0 0 20rpx 20rpx;
-      border-radius: 10rpx;
+      font-size: 22rpx;
+      line-height: 54rpx;
+      padding: 0 30rpx;
+      min-width: 158rpx;
+      text-align: center;
+      color: #969696;
+      margin-right: 17rpx;
+      border-radius: 30rpx;
+      background-color: #c5efe0;
     }
     .active {
-      background-color: #008dce;
+      background-color: #6fca95;
       color: #fff;
     }
   }
+  .two-tags {
+    border: none;
+    .tag {
+      box-sizing: border-box;
+      border: 1rpx solid #f0f2f4;
+      color: #969696;
+      background-color: #fff;
+    }
+    
+    .active {
+      background-color: #f0f2f4;
+    }
+  } 
   .list {
     margin: 0;
     padding: 0;
     list-style: none;
-    li {
+    padding: 0 34rpx;
+    .item {
       margin: 0;
       padding: 0;
-      padding: 20rpx;
+      padding: 16rpx;
+      background-color: #f7f9fd;
+      margin-bottom: 16rpx;
       .content {
         display: flex;
+        .share-icon {
+          width: 90rpx;
+          font-size: 0;
+          height: 172rpx;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          span {
+            display: inline-block;
+            font-size: 24rpx;
+            line-height: 27rpx;
+          }
+          img {
+            margin: 0;
+            vertical-align: top;
+            width: 27rpx;
+            height: 27rpx;
+            margin-right: 10rpx;
+          }
+        }
         img {
-          width: 140rpx;
-          height: 140rpx;
-          margin-right: 40rpx;
+          width: 172rpx;
+          height: 172rpx;
+          margin-right: 22rpx;
         }
         .intr {
+          flex: 1;
           p {
+            max-width: 360rpx;
             margin: 0;
             padding: 0;
-            color: #c4c5c7;
+            color: #969696;
             line-height: 30rpx;
             font-size: 20rpx;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
           }
           .title {
             font-size: 30rpx;
+            line-height: 28rpx;
+            margin-bottom: 13rpx;
             font-weight: bold;
             line-height: 40rpx;
-            color: #000;
+            color: #111110;
           }
           .share {
             span {
@@ -355,32 +452,18 @@ export default {
           }
           .tag {
             span {
+              box-sizing: border-box;
+              text-align: center;
+              min-width: 105rpx;
+              height: 36rpx;
               margin-top: 15rpx;
               padding: 0rpx 10rpx;
               margin-right: 20rpx;
-              border-radius: 10rpx;
               color: #fff;
               display: inline-block;
-              background-color: #f27583;
+              background-color: #6fca95;
+              border-radius: 18rpx;
             }
-          }
-        }
-      }
-      .foote {
-        margin-top: 20rpx;
-        padding-top: 20rpx;
-        border-top: 2rpx solid #efeff9;
-        display: flex;
-        .active {
-          color: #008dce;
-        }
-        p {
-          flex: 1;
-          text-align: center;
-          font-size: 30rpx;
-
-          .icon {
-            margin-right: 10rpx;
           }
         }
       }
@@ -389,11 +472,11 @@ export default {
 
 }
 .search {
-  background-color: #fff;
-  padding: 20rpx;
-  margin-bottom: 30rpx;
+  background-color: #f7f9fd;
+  margin: 0 45rpx 24rpx;
   border-radius: 10rpx;
   display: flex;
+  overflow: hidden;
   .input {
     flex: 1;
     position: relative;
@@ -401,16 +484,17 @@ export default {
       position: absolute;
       top: 0;
       left: 20rpx;
-      font-size: 40rpx;
+      font-size: 50rpx;
       font-weight: bold;
-      line-height: 70rpx;
+      line-height: 94rpx;
+      color: #6ec995;
     }
     input {
-      font-size: 30rpx;
-      padding-left: 70rpx;
-      height: 70rpx;
+      height: 94rpx;
+      line-height: 94rpx;
+      font-size: 28rpx;
+      padding-left: 80rpx;
       background-color: #efeff9;
-      border-radius: 40rpx;
     }
   }
   .collect {
@@ -429,55 +513,67 @@ export default {
 .board {
   color: #5c616a;
   background-color: #fff;
-  padding: 20rpx;
-  border-radius: 10rpx;
+  padding: 30rpx 10rpx 50rpx;
   overflow: hidden;
-  margin-bottom: 30rpx;
+  margin: 20rpx 30rpx;
+  border-radius: 10rpx;
+  .title {
+    padding: 0 30rpx;
+    font-size: 30rpx;
+    font-weight: 400;
+    color: #111110;
+    span {
+      float: right;
+      font-size: 24rpx;
+      font-weight: 400;
+      color: #606060;
+    }
+  }
   .content {
-    margin-top: 40rpx;
     display: flex;
     .item {
       flex: 1;
       text-align: center;
-      font-size: 50rpx;
       font-weight: bold;
+      color: #6ec995;
+      font-size: 74rpx;
+      line-height: 74rpx;
       p {
-        font-weight: normal;
-        font-size: 20rpx;
-        line-height: 30rpx;
+        line-height: 24rpx;
+        font-size: 24rpx;
+        font-family: Source Han Sans CN, Source Han Sans CN-Regular;
+        font-weight: 400;
+        text-align: center;
+        color: #606060;
+        margin-bottom: 13rpx;
       }
     }
   }
   ul {
-    display: inline-block;
     list-style: none;
     margin: 0;
     padding: 0;
     font-size: 0;
-    background-color: #edf0fa;
     border-radius: 25rpx;
-    margin-top: 30rpx;
+    height: 80rpx;
+    text-align: center;
+    background-color: #f5f8fc;
+    margin: 45rpx 0;
     li {
+      display: inline-block;
+      vertical-align: top;
+      height: 100%;
+      width: 25%;
       border-radius: 25rpx;
       line-height: 30rpx;
-      font-size: 20rpx;
-      display: inline-block;
-      color: #2e63ef;
-      padding: 10rpx 30rpx;
+      font-size: 26rpx;
+      line-height: 80rpx;
+      color: #111110;
     }
     li.active {
       color: #fff;
-      background-color: #2e63ef;
+      background-color: #6ec995;
     }
-  }
-  .title {
-    line-height: 30rpx;
-    font-size: 24rpx;
-    span {
-      float: right;
-      font-size: 20rpx;
-    }
-
   }
 }
 </style>

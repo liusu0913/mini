@@ -10,12 +10,12 @@ export default {
   },
   state: {
     info: {
-      name: 'fesuliu',
+      name: '刘先生',
       img: 'https://rocket-dev.woa.com/images/rocket.png',
       title: '前端开发工程师',
       phone: '15811240124'
     },
-    isLogin: false
+    isLogin: true
   },
   mutations: {
     setUserInfo(state, info) {

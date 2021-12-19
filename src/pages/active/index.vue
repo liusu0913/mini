@@ -34,26 +34,29 @@
           :class="{active: choseTab === 'msg'}"
           @click="changeTab('msg')"
         >
-          <span class="icon icon-card" />
+          <img src="../../static/img/active1.png" alt="">
           名片信息
         </p>
         <p
           :class="{active: choseTab === 'address'}"
           @click="changeTab('address')"
         >
-          <span class="icon icon-address" />名片位置
+          <img src="../../static/img/active2.png" alt="">
+          名片位置
         </p>
         <p
           :class="{active: choseTab === 'edit'}"
           @click="goEditPage"
         >
-          <span class="icon icon-edit" />名片编辑
+          <img src="../../static/img/active3.png" alt="">
+          名片编辑
         </p>
         <p
           :class="{active: choseTab === 'delete'}"
           @click="deleteCard('delete')"
         >
-          <span class="icon icon-banned" />去除名片
+          <img src="../../static/img/active4.png" alt="">
+          去除名片
         </p>
         <button
           class="save"
@@ -85,7 +88,8 @@ export default {
       },
       loadImagePath: '',
       bgConfig: {
-        y: 0
+        y: 0,
+        width: uni.upx2px(668),
       }
     }
   },
@@ -95,22 +99,15 @@ export default {
     })
   },
   watch: {
-    choseTab(value) {
-      const isDelete = value === 'delete'
-      const that = this
-      const query = wx.createSelectorQuery()
-      // 选择class id
-      query.select('.content').boundingClientRect(function (rect) {
-        that.$set(that.bgConfig, 'width', rect.width)
-        that.$set(that.bgConfig, 'height', isDelete ? rect.height : (rect.height / 10) * 9)
-        that.$set(that.bgConfig, 'all', rect.height)
-        if (isDelete) {
-          that.$set(that.bgConfig, 'y', 0)
-        }
-      }).exec()
-    },
     bgConfig() {
       this.initPage(this.changeCardRendaer())
+    },
+    choseTab(value) {
+      if (value === 'delete') {
+        this.initPage([])
+      } else {
+        this.initPage(this.changeCardRendaer())
+      }
     },
     defaultMessageChose() {
       this.initPage(this.changeCardRendaer())
@@ -124,9 +121,8 @@ export default {
     const query = wx.createSelectorQuery()
     // 选择class id
     query.select('.content').boundingClientRect(function (rect) {
-      that.$set(that.bgConfig, 'width', rect.width)
-      that.$set(that.bgConfig, 'height', (rect.height / 10) * 9)
-      that.$set(that.bgConfig, 'all', rect.height)
+      that.$set(that.bgConfig, 'height', rect.height - uni.upx2px(200))
+      that.$set(that.bgConfig, 'all', rect.height - uni.upx2px(20))
     }).exec()
   },
   methods: {
@@ -198,15 +194,6 @@ export default {
     },
     deleteCard(key) {
       this.choseTab = key
-      const that = this
-      const query = wx.createSelectorQuery()
-      // 选择class id
-      query.select('.content').boundingClientRect(function (rect) {
-        that.$set(that.bgConfig, 'width', rect.width)
-        that.$set(that.bgConfig, 'height', rect.height)
-        that.$set(that.bgConfig, 'all', rect.height)
-      }).exec()
-      this.initPage([])
     },
     changeMsgOptions(item) {
       const index = this.defaultMessageChose.indexOf(item)
@@ -222,11 +209,9 @@ export default {
     changePosition(position) {
       this.defaultPosition = position
       if (position === '下边') {
-        console.log(0)
         this.$set(this.bgConfig, 'y', uni.upx2px(0))
       } else {
-        console.log(120)
-        this.$set(this.bgConfig, 'y', uni.upx2px(120))
+        this.$set(this.bgConfig, 'y', uni.upx2px(127 + 20))
       }
     },
     changeTab(key) {
@@ -234,23 +219,20 @@ export default {
     },
     changeCardRendaer() {
       const that = this
-      const { bgConfig } = that
+      const {bgConfig} = that
       const renderData = []
       const isTop = this.defaultPosition !== '下边'
       const noHasImg = this.defaultMessageChose.indexOf(0) === -1
-      const txtLen = noHasImg ? this.defaultMessageChose.length : this.defaultMessageChose.length - 1
-      let txtSpace = (100 / (txtLen + 1)) - 10
-      if (isTop) { txtSpace = txtSpace + 10 }
       const cardMap = {
         0: () => {
           return {
             type: 'image', // 绘制类型, 详见上方 绘制类型大纲
             // ...对应type的属性, 详见下方
             url: '/static/logo.png',
-            dx: uni.upx2px(20),
-            dy: isTop ? uni.upx2px(10) : bgConfig.height,
-            dWidth: uni.upx2px(100),
-            dHeight: uni.upx2px(100),
+            dx: uni.upx2px(0),
+            dy: isTop ? uni.upx2px(0) : 10 + bgConfig.height,
+            dWidth: uni.upx2px(127),
+            dHeight: uni.upx2px(127),
             circleSet: true
           }
         },
@@ -259,21 +241,21 @@ export default {
             type: 'text', // 绘制类型, 详见上方 绘制类型大纲
             // ...对应type的属性, 详见下方
             text: that.info.name,
-            size: uni.upx2px(36),
-            color: '#1c1c1c',
-            dx: noHasImg ? uni.upx2px(20) : uni.upx2px(150),
-            dy: isTop ? uni.upx2px(txtSpace + (30 * index)) : bgConfig.height + uni.upx2px(txtSpace + (30 * index))
+            size: uni.upx2px(38),
+            color: '#111110',
+            dx: noHasImg ? uni.upx2px(0) : uni.upx2px(127 + 28),
+            dy: isTop ? uni.upx2px(29) : bgConfig.height + uni.upx2px(58)
           }
         },
         2: (index) => {
           return {
             type: 'text', // 绘制类型, 详见上方 绘制类型大纲
             // ...对应type的属性, 详见下方
-            text: that.info.title,
-            size: uni.upx2px(30),
-            color: '#969696',
-            dx: noHasImg ? uni.upx2px(20) : uni.upx2px(150),
-            dy: isTop ? uni.upx2px(txtSpace + (30 * index)) : bgConfig.height + uni.upx2px(txtSpace + (30 * index))
+            text: `/${that.info.title}`,
+            size: uni.upx2px(24),
+            color: '#606060',
+            dx: noHasImg ? uni.upx2px(28 + that.info.name.length * 38) : uni.upx2px(127 + 28 + that.info.name.length * 38),
+            dy: isTop ? uni.upx2px(41) : bgConfig.height + uni.upx2px(70)
           }
         },
         3: (index) => {
@@ -281,10 +263,10 @@ export default {
             type: 'text', // 绘制类型, 详见上方 绘制类型大纲
             // ...对应type的属性, 详见下方
             text: that.info.phone,
-            size: uni.upx2px(30),
-            color: '#969696',
-            dx: noHasImg ? uni.upx2px(20) : uni.upx2px(150),
-            dy: isTop ? uni.upx2px(txtSpace + (30 * index)) : bgConfig.height + uni.upx2px(txtSpace + (30 * index))
+            size: uni.upx2px(24),
+            color: '#606060',
+            dx: noHasImg ? uni.upx2px(0) : uni.upx2px(127 + 30),
+            dy: isTop ? uni.upx2px(79) : bgConfig.height +  uni.upx2px(108)
           }
         }
       }
@@ -297,9 +279,6 @@ export default {
 
       return renderData
     },
-    changeBgRender() {
-
-    },
     initPage(cardData) {
       const that = this
       const { bgConfig } = that
@@ -311,9 +290,9 @@ export default {
         qrCodeArray: () => {
           return [{
             text: 'https://www.baidu.com',
-            size: bgConfig.width * 0.16,
-            dx: bgConfig.width - bgConfig.width * 0.16 - uni.upx2px(20),
-            dy: bgConfig.height - bgConfig.width * 0.16 - uni.upx2px(40) + (bgConfig.y || 0)
+            size: uni.upx2px(130),
+            dx: uni.upx2px(529),
+            dy: bgConfig.y ? uni.upx2px(0) : bgConfig.height + 10
           }]
         },
         setCanvasWH() {
@@ -335,48 +314,60 @@ export default {
 <style lang="scss">
   .box {
     position: relative;
-    padding: 20rpx;
-    background-color: #eff2fa;
+    box-sizing: border-box;
     height: 100vh;
+    padding: 20rpx;
+    background: url('../../static/img/bg.png') no-repeat;
+    background-size: 100% 100%;
+    display: flex;
+    flex-direction: column;
   }
   .content {
-    height: 80vh;
+    flex: 1;
+    box-sizing: border-box;
+    padding: 20rpx;
+    background-color: #fff;
+    height: 897rpx;
   }
   .tabs {
     background-color: #fff;
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    height: 270rpx;
     width: 100%;
-    margin-top: 30rpx;
-    padding: 20rpx 0 calc(constant(safe-area-inset-bottom));    /*兼容 IOS<11.2*/
-    padding: 20rpx 0 calc(env(safe-area-inset-bottom));
     .nav {
       font-size: 0;
-      padding-bottom: 20rpx;
+      padding: 20rpx 0;
       span {
+        box-sizing: border-box;
+        height: 55rpx;
+        padding: 0 48rpx;
+        line-height: 55rpx;
         display: inline-block;
-        font-size: 26rpx;
-        line-height: 50rpx;
-        padding: 0 30rpx;
-        color: #4a73ec;
-        background-color: #e7edfc;
-        margin-left: 20rpx;
-        border-radius: 20rpx;
+        font-size: 22rpx;
+        font-weight: 400;
+        text-align: center;
+        color: #969696;
+        margin-left: 10rpx;
+        border-radius: 30rpx;
+        border: 1px solid #f0f2f4;
       }
       .no-choose {
-        color: #a1addc;
+        background-color: #f0f2f4;
+
       }
     }
     .tab {
       padding: 20rpx;
       display: flex;
       border-top: 1px solid #eff2fa;
+      text-align: center;
+      img {
+        margin: auto;
+        vertical-align: top;
+        width: 60rpx;
+        height: 60rpx;
+      }
       .active {
-        color: #4a73ec;
-        .icon {
-          color: #4a73ec;
-        }
+        color: #7fd397;
       }
       p {
         text-align: center;
@@ -393,10 +384,17 @@ export default {
         }
       }
       .save {
-        background-color: #4a72ea;
-        margin-top: 25rpx;
-        border-radius: 20rpx;
+        margin: 0;
+        padding: 0;
+        font-size: 24rpx;
+        height: 90rpx;
+        width: 90rpx;
+        line-height: 90rpx;
+        background-color: #7fd397;
         color: #fff;
+        outline: none;
+        border: none;
+        border-radius: 50%;
       }
     }
   }

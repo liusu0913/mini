@@ -6,16 +6,10 @@ const envUrlMap = {
   },
   development: {
     url: 'http://120.78.186.180:3000/mock/368/',
-    apis: [
-      '/get/fodderTab',
-      '/get/tab/tags',
-      '/get/tab/tags',
-      '/get/fodder/list',
-      '/get/message'
-    ]
+    apis: []
   },
   production: {
-    url: 'http://yapi.qqten.com/mock/94',
+    url: 'http://120.78.186.180:3000/mock/368/',
     apis: []
   }
 }

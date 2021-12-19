@@ -1,35 +1,46 @@
 <template>
   <div class="login">
-    <h2>齿科获客助手</h2>
+    <img class="banner" src="../../static/img/login-banner.png" alt="">
     <div class="login-area">
-      <input
-        v-model="jobNumber"
-        class="uni-input"
-        placeholder="请输入员工工号"
-      >
-      <input
-        v-model="iphone"
-        class="uni-input"
-        placeholder="请输入手机号"
-      >
-      <div class="code">
+      <div class="job-number item">
+        <p>员工工号</p>
         <input
-          v-model="code"
+          v-model="jobNumber"
           class="uni-input"
-          placeholder="请输入短信验证码"
+          placeholder="请输入员工工号"
         >
-        <span
-          v-if="!beginCountDown"
-          @click="getCode"
-        >
-          {{ codeBtnTxt }}
-        </span>
-        <span v-else>
-          {{ timeNum }}s
-        </span>
       </div>
+      <div class="phone item">
+        <p>手机号</p>
+        <input
+          v-model="iphone"
+          class="uni-input"
+          placeholder="请输入手机号"
+        >
+      </div>
+      <div class="item">
+        <p>短信验证码</p>
+        <div class="code">
+          <input
+            v-model="code"
+            class="uni-input"
+            placeholder="请输入短信验证码"
+          >
+          <span
+            v-if="!beginCountDown"
+            @click="getCode"
+          >
+            {{ codeBtnTxt }}
+          </span>
+          <span v-else>
+            {{ timeNum }}s
+          </span>
+        </div>
+      </div>
+      
     </div>
     <button
+      class="login-btn"
       type="primary"
       @click="userLogin"
     >
@@ -93,32 +104,60 @@ export default {
 
 <style lang="scss">
   .login {
-    box-sizing: border-box;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-70%);
+    height: 100vh;
+    background: url('../../static/img/login-bg.png') no-repeat;
+    background-size: 100% 100%;
+    .login-btn {
+      margin-top: 73rpx;
+      width: 470rpx;
+      height: 83rpx;
+      background-color: #6ec995;
+      font-size: 30rpx;
+      line-height: 83rpx;
+      text-align: center;
+      color: #fff;
+      border-radius: 42rpx;
+    }
+  }
+  .banner {
+    vertical-align: top;
     width: 100%;
-    padding: 0 40rpx;
   }
-  h2 {
-    font-size: 40rpx;
-    text-align: center;
-    margin-bottom: 200rpx;
-  }
-  .uni-input {
-    border-bottom: 1px solid #ccc;
-    margin-bottom: 40rpx;
+  .item {
+    padding: 0 100rpx;
+    margin-top: 27rpx;
+    margin-bottom: 35rpx;
+    p {
+      font-size: 26rpx;
+      font-weight: 400;
+      text-align: left;
+      color: #5f5f5f;
+      margin-bottom: 15rpx;
+    }
+    .uni-input {
+      height: 90rpx;
+      line-height: 90rpx;
+      font-size: 34rpx;
+      text-align: left;
+      color: #dcdbe3;
+      border-bottom: 1px solid #ccc;
+    }
   }
   .code {
     display: flex;
     border-bottom: 1px solid #ccc;
-    margin-bottom: 90rpx;
+
     span {
       text-align: center;
       display: inline-block;
-      width: 180rpx;
-      color: #000;
-      font-size: 32rpx;
+      width: 202rpx;
+      height: 62rpx;
+      margin-top: 14rpx;
+      line-height: 62rpx;
+      font-size: 26rpx;
+      color: #fff;
+      background-color: #6ec995;
+      border-radius: 31rpx;
     }
     .uni-input {
       line-height: 40rpx;

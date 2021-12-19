@@ -7,6 +7,7 @@
       @up="getMsgList"
     >
       <div
+        @click="skipPage(item)"
         v-for="item in messageList"
         :key="item.id"
         class="card"
@@ -15,30 +16,34 @@
           :src="item.img"
           alt=""
         >
-        <div
-          v-if="item.title"
-          class="content"
-        >
-          <div class="title">
-            {{ item.title }}
-          </div>
+        <div class="bottom">
           <div
-            v-if="item.time"
-            class="time"
+            v-if="item.title"
+            class="content"
           >
-            活动时间：{{ item.time }}
+            <div class="title">
+              {{ item.title }}
+            </div>
+            <span
+              v-if="item.time"
+              class="time"
+            >
+              活动时间：{{ item.time }}
+            </span>
+            <span
+              v-if="item.use"
+              class="use"
+            >
+              活动使用：{{ useMap[item.use] }}
+            </span>
           </div>
-          <div
-            v-if="item.use"
-            class="use"
-          >
-            活动使用{{ useMap[item.use] }}
+          <div class="foot">
+            <span>查看详情</span>
+            <img src="../../static/img/go.png" alt="">
           </div>
         </div>
-        <div class="foot">
-          <span @click="skipPage(item)">查看详情</span>
-          <span>···</span>
-        </div>
+        
+        
       </div>
     </mescroll-body>
   </view>
@@ -76,9 +81,6 @@ export default {
       offset: 0,
       messageList: []
     }
-  },
-  mounted() {
-    this.initPage()
   },
   methods: {
     getMsgList() {
@@ -118,47 +120,65 @@ export default {
 <style lang="scss">
   .box {
     background-color: #f1f2f7;
-    min-height: 100vh;
+    background: url('../../static/img/bg.png') no-repeat;
+    background-size: 100% 100%;
+    height: 100vh;
+    padding: 0 30rpx;
   }
+ 
   .card {
-    width: 80%;
+    flex: 1;
     margin: 0 auto;
     margin-top: 30rpx;
-    background-color: #fff;
+    background-color: #f7f9fd;
     padding: 20rpx;
     border-radius: 10rpx;
     img {
       vertical-align: top;
       width: 100%;
-      height: 270rpx;
+      height: 284rpx;
+      margin-bottom: 36rpx;
+    }
+    .bottom {
+      display: flex;
     }
     .content {
-      padding: 40rpx 0 0;
-      padding-bottom: 80rpx;
+      flex: 1;
+      padding: 0 20rpx;
       .title {
-        font-size: 40rpx;
-        font-weight: bold;
-        color: #8c8c8c;
-        margin-bottom: 20rpx;
+        font-size: 30rpx;
+        font-weight: 400;
+        text-align: left;
+        color: #111110;
       }
       .time, .use {
-        font-size: 30rpx;
-        color: #8c8c8c;
+        font-size: 24rpx;
+        color: #969696;
+      }
+      span {
+        margin-right: 32rpx;
       }
     }
     .foot {
-      padding: 0 20rpx;
-      display: flex;
-      line-height: 50rpx;
-      span:first-child {
-        flex: 1;
-        color: #459ad0;
-        font-size: 34rpx;
+      margin-top: 20rpx;
+      span {
+        vertical-align: top;
+        display: inline-block;
+        font-size: 24rpx;
+        font-family: Source Han Sans CN, Source Han Sans CN-Regular;
+        font-weight: 400;
+        text-align: left;
+        color: #606060;
+        line-height: 37rpx;
+        margin-right: 18rpx;
       }
-      span:last-child {
-        color: black;
-        font-weight: bold;
+      img {
+        vertical-align: top;
+        width: 21rpx;
+        height: 37rpx;
+        margin: 0;
       }
     }
+    
   }
 </style>

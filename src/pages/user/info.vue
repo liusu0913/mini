@@ -6,10 +6,12 @@
         <p class="name">
           {{ userInfo.name }}
           <span v-if="userInfo.hasStay">未留资</span>
+          <span>未留资</span>
         </p>
-        <p class="source">
-          最初来源
-          <span>{{ userInfo.source }}</span>
+        <p class="data">
+          <span class="recommend">推荐度{{ parseInt(userInfo.recommend) }}%</span>
+          <span>活跃度{{ parseInt(userInfo.active) }}%</span>
+          <span>影响人数{{ parseInt(userInfo.affect) }}</span>
         </p>
       </view>
     </view>
@@ -44,7 +46,7 @@
             来自{{ item.source }}
           </view>
           <view class="time">
-            {{ item.time }}
+            最后访问{{ item.time }}
           </view>
         </view>
         <view class="title">
@@ -55,9 +57,6 @@
             v-for="(tag, i) in item.tags"
             :key="i"
           >{{ tag }}</span>
-        </view>
-        <view class="last-time">
-          最后访问时间：{{ item.time }}
         </view>
       </view>
     </view>
@@ -96,64 +95,76 @@ export default {
 
 <style lang="scss" scope>
 .box {
-  background-color: #efeff9;
-  min-height: 100vh;
+  box-sizing: border-box;
+  height: 100vh;
+  background: url('../../static/img/bg.png') no-repeat;
+  background-size: 100% 100%;
+  padding: 0 20rpx;
+  padding-top: 30rpx;
 }
 .user {
+  border-radius: 10rpx 10rpx 0 0;
   background-color: #fff;
-  padding: 40rpx 20rpx;
+  padding: 30rpx 20rpx;
   display: flex;
   img {
-    width: 110rpx;
-    height: 110rpx;
+    width: 148rpx;
+    height: 148rpx;
     border-radius: 50%;
     margin-right: 30rpx;
   }
   .intr {
+    margin-top: 20rpx;
     flex: 1;
     .name {
-      font-size: 30rpx;
-      margin-bottom: 30rpx;
+      font-size: 40rpx;
+      font-weight: 500;
+      color: #111110;
       span {
-        position: relative;
-        padding: 10rpx 20rpx;
-        background-color: #dadada;
-        color: #7d7d7d;
-        border-radius: 10rpx;
+        display: inline-block;
+        vertical-align: top;
+        width: 80rpx;
+        height: 32rpx;
+        line-height: 32rpx;
         margin-left: 30rpx;
-      }
-      span::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: -20rpx;
-        transform: translateY(-50%);
-        border: 10rpx solid transparent;
-        border-left-color: #c4c4c4;
+        margin-top: 10rpx;
+        color: #fff;
+        background-color: #e4bda5;
+        border-radius: 16rpx;
+        font-size: 20rpx;
+        text-align: center;
       }
     }
-    .source {
-      font-size: 24rpx;
-      color: #a7a7a4;
+    .data {
+      margin-top: 17rpx;
+      font-size: 20rpx;
+      line-height: 30rpx;
+      color: #969696;
+      span {
+        margin-right: 30rpx;
+      }
+      .recommend {
+        color: #606060;
+      }
     }
   }
 }
 .board {
   display: flex;
-  margin: 20rpx 20rpx;
   background-color: #fff;
   text-align: center;
-  border-radius: 10rpx;
   p {
     flex: 1;
-    font-size: 50rpx;
-    font-weight: bold;
-    color: #000;
-    padding: 30rpx 0;
+    font-size: 74rpx;
+    font-weight: 700;
+    text-align: center;
+    color: #5dc096;
     span {
       display: block;
       font-size: 24rpx;
-      color: #8f8f8f;
+      font-weight: 400;
+      text-align: center;
+      color: #606060;
     }
   }
 }
@@ -162,47 +173,58 @@ export default {
   padding: 20rpx 20rpx;
   .tag {
     font-size: 0;
+    padding: 32rpx 0;
+    white-space: nowrap;
+    overflow: auto;
     span {
+      height: 54rpx;
+      line-height: 54rpx;
+      padding: 0 36rpx;
       display: inline-block;
-      padding: 10rpx 20rpx;
-      font-size: 30rpx;
       color: #fff;
-      background-color:#00a327;
-      border-radius: 10rpx;
-      margin-right: 10rpx;
+      font-size: 22rpx;
+      font-weight: 400;
+      text-align: center;
+      background-color:#5dc096;
+      border-radius: 30rpx;
+      margin-right: 15rpx;
     }
   }
   .item {
-    padding: 30rpx 20rpx;
-    border-bottom: 1px solid #c4cec4;
+    padding: 30rpx 40rpx;
+    background-color: #f7f9fd;
+    margin-bottom: 15rpx;
+    border-radius: 10rpx;
     .head {
-      font-size: 26rpx;
       display: flex;
-      color: #8e8e8e;
+      font-size: 20rpx;
+      color: #969696;
       .source {
         flex: 1;
       }
     }
     .title {
-      font-size: 30rpx;
-      line-height: 60rpx;
+      margin: 20rpx 0;
+      font-size: 28rpx;
+      font-family: Source Han Sans CN, Source Han Sans CN-Regular;
+      font-weight: 400;
+      text-align: left;
+      color: #111110;
     }
     .tags {
       font-size: 0;
       span {
         display: inline-block;
-        font-size: 24rpx;
-        padding: 10rpx 20rpx;
-        background-color: #dadada;
-        color: #7d7d7d;
-        border-radius: 10rpx;
+        font-size: 20rpx;
+        line-height: 40rpx;
+        text-align: center;
+        color: #969696;
+        padding: 0rpx 23rpx;
+        background-color: #ffeedc;
+        border-radius: 20rpx;
         margin-right: 20rpx;
-        margin-bottom: 20rpx;
+        margin-bottom: 10rpx;
       }
-    }
-    .last-time {
-      font-size: 26rpx;
-      color: #8e8e8e;
     }
   }
 }

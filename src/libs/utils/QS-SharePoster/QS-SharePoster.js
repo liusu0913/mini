@@ -35,6 +35,7 @@ function getSharePoster(obj) {
     draw
   } = obj
   return new Promise(async (rs, rj) => {
+    console.log(bgConfig, 111111)
     try {
       _app.showLoading('正在准备海报数据')
       if (!Context) {
