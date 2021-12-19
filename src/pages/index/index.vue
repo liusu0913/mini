@@ -347,6 +347,7 @@ export default {
     margin-bottom: 60rpx;
     img {
       height: 80rpx;
+      width: 80rpx;
     }
     p {
       color: #5f5f5f;

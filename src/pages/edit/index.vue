@@ -4,8 +4,10 @@
       <li>
         <span>头像<i>*</i></span>
         <img
-          :src="userInfo.img"
+        class="headerPic"
+          src="../../static/img/header.png"
         >
+        <i class="arrowIcon"></i>
       </li>
       <li>
         <span>姓名<i>*</i></span>
@@ -97,20 +99,48 @@ export default {
 
 <style lang="scss">
 .edit-page {
+  padding-top: 50rpx;
   height: 100vh;
-  background-color: #eff2fa;
+  background: url('../../static/img/bg.png') no-repeat;
+  background-size: 100% 100%;
+  background-color: #fff;
+  background-position-y: -240rpx;
+  .headerPic {
+    margin-right: 20rpx;
+  }
+  .arrowIcon {
+    display: inline-block;
+    position: absolute;
+    right: 0rpx;
+    top: 50%;
+    margin-top: -12rpx;
+    width: 14rpx;
+    height: 23rpx;
+    background: url('../../static/img/go.png') no-repeat;
+  background-size: 100% 100%;
+  }
   .saveBtn {
     margin: 0 50rpx;
-    color: #fff;
     line-height: 80rpx;
     font-size: 30rpx;
     text-align: center;
     background-color: #4a73ec;
     border-radius: 40rpx;
+    width: 470rpx;
+    height: 84rpx;
+    color: #fff;
+    margin: 0 auto;
+    position: absolute;
+    bottom: 60rpx;
+    left: 50%;
+    margin-left: -235rpx;
+    background: url('../../static/img/btnBg.png') no-repeat;
+    background-size: 100% 100%;
   }
   ul, li {
     margin: 0;
     padding: 0;
+    font-size: 26rpx;
     list-style: none;
     background-color: #fff;
     padding:  0 20rpx;
@@ -119,6 +149,10 @@ export default {
     margin-bottom: 20rpx;
   }
   .usr {
+    background-color: #fff;
+    margin: 0 30rpx 30rpx;
+    border-radius: 10rpx;
+    box-shadow: 0px 0px 20rpx 6rpx rgb(0 0 0 / 5%);
     li:first-child {
       img {
         width: 80rpx;
@@ -128,7 +162,6 @@ export default {
       span {
         flex: 1;
         vertical-align: top;
-        font-size: 36rpx;
         line-height: 80rpx;
       }
     }
@@ -153,10 +186,10 @@ export default {
   li {
     display: flex;
     padding: 20rpx;
+    position: relative;
     border-bottom: 2rpx solid #eff2fa;
     span {
       display: inline-block;
-      font-size: 36rpx;
       line-height: 60rpx;
       margin-right: 10rpx;
       i {
@@ -171,6 +204,7 @@ export default {
       display: inline-block;
       line-height: 60rpx;
       height: 60rpx;
+      color: #7e7a7a!important;
     }
     .radio {
       flex: 1;
