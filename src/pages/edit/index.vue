@@ -5,7 +5,7 @@
         <span>头像<i>*</i></span>
         <img
         class="headerPic"
-          src="../../static/img/header.png"
+          :src="userInfo.img"
         >
         <i class="arrowIcon"></i>
       </li>
@@ -134,8 +134,7 @@ export default {
     bottom: 60rpx;
     left: 50%;
     margin-left: -235rpx;
-    background: url('../../static/img/btnBg.png') no-repeat;
-    background-size: 100% 100%;
+    background: #7fd397;
   }
   ul, li {
     margin: 0;

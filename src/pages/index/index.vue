@@ -384,6 +384,7 @@ export default {
       padding: 0 20rpx;
       display: flex;
       img {
+        width: 84rpx;
         height: 84rpx;
         margin-right: 20rpx;
       }

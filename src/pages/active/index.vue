@@ -289,7 +289,7 @@ export default {
         bgConfig,
         qrCodeArray: () => {
           return [{
-            text: 'https://www.baidu.com',
+            text: 'https://www.ihaola.com.cn/partners/haola-2ca4db68-192a-f911-501a-f155af6f5772/face-tooth/index.html',
             size: uni.upx2px(130),
             dx: uni.upx2px(529),
             dy: bgConfig.y ? uni.upx2px(0) : bgConfig.height + 10
@@ -321,6 +321,8 @@ export default {
     background-size: 100% 100%;
     display: flex;
     flex-direction: column;
+    background-position-y: -132px;
+    background-color: #fff;
   }
   .content {
     flex: 1;

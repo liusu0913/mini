@@ -327,6 +327,8 @@ export default {
   background: url('../../static/img/bg.png') no-repeat;
   background-size: 100% 100%;
   padding-top: 30rpx;
+  background-position-y: -132px;
+  background-color: #fff;
 }
 .items {
   background-color: #fff;
