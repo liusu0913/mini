@@ -121,7 +121,7 @@ export default {
     const query = wx.createSelectorQuery()
     // 选择class id
     query.select('.content').boundingClientRect(function (rect) {
-      that.$set(that.bgConfig, 'height', rect.height - uni.upx2px(200))
+      that.$set(that.bgConfig, 'height', rect.height - uni.upx2px(220))
       that.$set(that.bgConfig, 'all', rect.height - uni.upx2px(20))
     }).exec()
   },
@@ -229,7 +229,7 @@ export default {
             type: 'image', // 绘制类型, 详见上方 绘制类型大纲
             // ...对应type的属性, 详见下方
             url: '/static/logo.png',
-            dx: uni.upx2px(0),
+            dx: uni.upx2px(10),
             dy: isTop ? uni.upx2px(0) : 10 + bgConfig.height,
             dWidth: uni.upx2px(127),
             dHeight: uni.upx2px(127),
@@ -290,8 +290,9 @@ export default {
         qrCodeArray: () => {
           return [{
             text: 'https://www.ihaola.com.cn/partners/haola-2ca4db68-192a-f911-501a-f155af6f5772/face-tooth/index.html',
-            size: uni.upx2px(130),
-            dx: uni.upx2px(529),
+            size: uni.upx2px(150),
+            backgroung: '#fff',
+            dx: uni.upx2px(510),
             dy: bgConfig.y ? uni.upx2px(0) : bgConfig.height + 10
           }]
         },
@@ -317,7 +318,7 @@ export default {
     box-sizing: border-box;
     height: 100vh;
     padding: 20rpx;
-    background: url('../../static/img/bg.png') no-repeat;
+    background: url('https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/bg.png') no-repeat;
     background-size: 100% 100%;
     display: flex;
     flex-direction: column;

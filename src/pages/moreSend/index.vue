@@ -120,7 +120,7 @@ export default {
 <style lang="scss">
   .box {
     background-color: #f1f2f7;
-    background: url('../../static/img/bg.png') no-repeat;
+    background: url('https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/bg.png') no-repeat;
     background-size: 100% 100%;
     height: 100vh;
     padding: 0 30rpx;

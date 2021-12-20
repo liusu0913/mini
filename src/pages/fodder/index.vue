@@ -258,7 +258,7 @@ export default {
 <style lang="scss">
 .customer-box {
   padding: 20rpx 20rpx 0;
-  background: url('../../static/img/bg.png') no-repeat;
+  background: url('https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/bg.png') no-repeat;
   background-size: 100% 100%;
   height: 100vh;
 }
@@ -376,7 +376,8 @@ export default {
       padding: 0 16px;
       position: relative;
       img {
-        width: 22px;
+        width: 22rpx;
+        height: 37rpx;
         vertical-align: top;
         position: absolute;
         top: 50%;

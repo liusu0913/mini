@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <img class="banner" src="../../static/img/login-banner.png" alt="">
+    <img class="banner" src="https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/login-banner.png" alt="">
     <div class="login-area">
       <div class="job-number item">
         <p>员工工号</p>
@@ -105,7 +105,7 @@ export default {
 <style lang="scss">
   .login {
     height: 100vh;
-    background: url('../../static/img/login-bg.png') no-repeat;
+    background: url('https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/login-bg.png') no-repeat;
     background-size: 100% 100%;
     .login-btn {
       margin-top: 73rpx;

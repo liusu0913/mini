@@ -21,7 +21,7 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "./common/uni.scss";
+  // @import "./common/uni.scss";
 </style>
 
 <style lang="less">

@@ -101,7 +101,7 @@ export default {
 .edit-page {
   padding-top: 50rpx;
   height: 100vh;
-  background: url('../../static/img/bg.png') no-repeat;
+  background: url('https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/bg.png') no-repeat;
   background-size: 100% 100%;
   background-color: #fff;
   background-position-y: -240rpx;

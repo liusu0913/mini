@@ -34,25 +34,25 @@
       </div>
       <ul class="nav">
         <li @click="goWinCustomer(0)">
-          <img src="../../static/img/nav-1.png" alt="">
+          <img src="https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/nav-1.png" alt="">
           <p>儿童</p>
         </li>
         <li @click="goWinCustomer(1)">
-          <img src="../../static/img/nav-2.png" alt="">
+          <img src="https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/nav-2.png" alt="">
           <p>青少年</p>
         </li>
         <li @click="goWinCustomer(2)">
-          <img src="../../static/img/nav-3.png" alt="">
+          <img src="https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/nav-3.png" alt="">
           <p>中青年</p>
         </li>
         <li @click="goWinCustomer(3)">
-          <img src="../../static/img/nav-4.png" alt="">
+          <img src="https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/nav-4.png" alt="">
           <p>老年</p>
         </li>
       </ul>
       <div class="fodder">
-        <img @click="goFodderPage(2)" src="../../static/img/fodder-1.png" alt="">
-        <img @click="goFodderPage(1)" src="../../static/img/fodder-2.png" alt="">
+        <img @click="goFodderPage(2)" src="https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/fodder-1.png" alt="">
+        <img @click="goFodderPage(1)" src="https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/fodder-2.png" alt="">
       </div>
       <div class="tips">
         <p class="title">
@@ -63,7 +63,7 @@
             class="item"
             @click="goSendMorePage(0)"
           >
-            <img src="../../static/img/tips-1.png">
+            <img src="https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/tips-1.png">
             <div class="data">
               <p>群发提醒</p>
               <p class="num"><i>{{ sopTips.unreadCount }}</i>/{{ sopTips.allCount }}</p>
@@ -73,7 +73,7 @@
             class="item"
             @click="goSendMorePage(1)"
           >
-            <img src="../../static/img/tips-2.png">
+            <img src="https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/tips-2.png">
             <div class="data">
               <p>朋友圈发送提醒</p>
               <p class="num"><i>{{ friendTips.unreadCount }}</i>/{{ friendTips.allCount }}</p>
@@ -225,7 +225,7 @@ export default {
 <style lang="scss">
 .index-box {
   height: 100vh;
-  background: url('../../static/img/home-bg.png') no-repeat;
+  background: url('https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/home-bg.png') no-repeat;
   background-size: 100% 100%;
 }
 .user {
