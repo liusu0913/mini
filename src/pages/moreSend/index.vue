@@ -31,7 +31,7 @@
               活动时间：{{ item.time }}
             </span>
             <span
-              v-if="item.use"
+              v-if="item.use !== undefined"
               class="use"
             >
               活动使用：{{ useMap[item.use] }}
@@ -68,7 +68,7 @@ export default {
       pageType: 0,
       useMap: {
         0: '获客',
-        1: '拉新'
+        1: '销售'
       },
       isLoading: false,
       downOption: {

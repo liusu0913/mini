@@ -139,7 +139,7 @@ export default {
       line-height: 90rpx;
       font-size: 34rpx;
       text-align: left;
-      color: #dcdbe3;
+      color: #111110;
       border-bottom: 1px solid #ccc;
     }
   }
