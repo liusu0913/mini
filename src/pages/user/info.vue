@@ -6,7 +6,6 @@
         <p class="name">
           {{ userInfo.name }}
           <span v-if="userInfo.hasStay">未留资</span>
-          <span>未留资</span>
         </p>
         <p class="data">
           <span class="recommend">推荐度{{ parseInt(userInfo.recommend) }}%</span>

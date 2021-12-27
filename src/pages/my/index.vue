@@ -18,12 +18,12 @@
           </li>
           <li @click="goUserListPage(1)">
             <img class="icon" src="../../static/img/client2.png" alt="">
-            <span class="txt">推荐跟进用户</span>
+            <span class="txt">留资用户</span>
             <img class="go" src="../../static/img/go.png" alt="">
           </li>
           <li @click="goUserListPage(2)">
             <img class="icon" src="../../static/img/client1.png" alt="">
-            <span class="txt">推荐跟进用户</span>
+            <span class="txt">高传播力用户</span>
             <img class="go" src="../../static/img/go.png" alt="">
           </li>
         </ul>
@@ -222,16 +222,17 @@ export default {
 
 <style lang="scss" scope>
 .container {
+  box-sizing: border-box;
   background: url('https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/bg.png') no-repeat;
   background-size: 100% 100%;
   padding: 0 15rpx;
   height: 100vh;
 }
 .client {
+  box-sizing: border-box;
   height: 100%;
   background-color: #fff;
   border-radius: 10rpx;
-  overflow: hidden;
   padding: 0 10rpx;
   .nav {
     list-style: none;
@@ -293,7 +294,6 @@ export default {
   padding: 0 20rpx;
   line-height: 80rpx;
   background-color: #fff;
-  border-bottom: 2rpx solid #ccc;
   ul, li {
     list-style: none;
     margin: 0;

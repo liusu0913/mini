@@ -167,16 +167,13 @@ export default {
       isFilterCollect: false,
       oneTags: [ {
         id: 0,
-        title: '皮肤'
+        title: '正畸'
       }, {
         id: 1,
-        title: '牙齿'
+        title: '意外+种植'
       }, {
         id: 2,
-        title: '眼睛'
-      }, {
-        id: 3,
-        title: '头发'
+        title: '蛀牙'
       }],
       twoTags: [],
       activeList: [],
