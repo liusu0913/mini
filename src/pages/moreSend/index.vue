@@ -13,29 +13,29 @@
         class="card"
       >
         <img
-          :src="item.img"
+          :src="item.active.img"
           alt=""
         >
         <div class="bottom">
           <div
-            v-if="item.title"
+            v-if="item.active.title"
             class="content"
           >
             <div class="title">
-              {{ item.title }}
+              {{ item.active.title }}
             </div>
             <span
-              v-if="item.time"
+              v-if="item.active.startTime"
               class="time"
             >
-              活动时间：{{ item.time }}
+              活动时间：{{ item.active.startTime | date_format }}
             </span>
-            <span
-              v-if="item.use !== undefined"
+            <p
+              v-if="item.active.tags.length"
               class="use"
             >
-              活动使用：{{ useMap[item.use] }}
-            </span>
+              活动使用：{{ item.active.tags[0].name }}
+            </p>
           </div>
           <div class="foot">
             <span>查看详情</span>
@@ -61,6 +61,13 @@ export default {
     const pagearr = getCurrentPages()// 获取应用页面栈
     const currentPage = pagearr[pagearr.length - 1]// 获取当前页面信息
     this.pageType = currentPage.options.type
+    const titleMap = {
+      1: '群发助手',
+      2: '朋友圈助手'
+    }
+    uni.setNavigationBarTitle({
+      title: titleMap[this.pageType]
+    })
   },
   mixins: [MescrollMixin],
   data() {
@@ -87,9 +94,9 @@ export default {
       if (this.isLoading || this.messageList.length === this.listCount) return
       this.isLoading = true
       getSendMore.getSendMoreMsg({
-        pagesize: this.pagesize,
+        count: this.pagesize,
         offset: this.offset,
-        type: this.pageType
+        type: Number(this.pageType)
       }).then(data => {
         if (data.list) {
           if (this.offset) {

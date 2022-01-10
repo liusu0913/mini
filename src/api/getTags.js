@@ -1,11 +1,12 @@
 import http from '@/libs/request'
 
 export default {
-  getSendMoreMsg(data) {
+  list(data) {
     return http.request({
-      url: '/mini/activeRemind/list',
+      url: '/mini/tags/list',
       method: 'post',
       data
     })
   }
 }
+

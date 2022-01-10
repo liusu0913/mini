@@ -13,10 +13,17 @@ export default {
       method: 'get'
     })
   },
+  readSopTips(data) {
+    return http.request({
+      url: '/mini/remindTime/create',
+      method: 'post',
+      data
+    })
+  },
   getSopTips() {
     return http.request({
-      url: '/sop/tips',
-      method: 'get'
+      url: '/mini/activeRemind/getMsgCount',
+      method: 'post'
     })
   },
   getFriendTips() {

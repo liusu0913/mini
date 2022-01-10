@@ -20,66 +20,38 @@
       <div class="content">
         <div class="item">
           <p>分享内容数</p>
-          {{ parseInt(activeData.shareNum) }}
+          {{ parseInt(activeData.share) || 0 }}
         </div>
         <div class="item">
-          <p>分享内容数</p>
-          {{ parseInt(activeData.visitNum) }}
+          <p>浏览人数</p>
+          {{ parseInt(activeData.pv) || 0 }}
         </div>
         <div class="item">
-          <p>分享内容数</p>
-          {{ parseInt(activeData.allNum) }}
+          <p>分享量</p>
+          {{ parseInt(activeData.shareActiveCount) || 0 }}
         </div>
       </div>
     </div>
     <div class="search">
       <div class="input">
-        <span
-          class="icon icon-search"
+        <img
+          src="../../static/img/search.png"
           @click="beginSearch"
         />
         <input
           v-model="filterRules"
           confirm-type="search"
-          placeholder="请输入内容的标题或者分享文案"
+          placeholder="请输入内容的标题"
         >
       </div>
     </div>
+    <multTabs 
+      :defaultNavId="currentTabId"
+      @tagChange="renderList" 
+      v-if="!isSearch && currentTabId"
+    >
+    </multTabs>
     <div class="items">
-      <eTab
-        v-if="!isSearch"
-        :active-tab="currentTab"
-        :tab-list="tabList"
-        @change="chanegTab"
-      />
-      <div
-        v-if="!isSearch"
-        class="one-tags"
-      >
-        <span
-          v-for="tag in oneTags"
-          :key="tag.id"
-          :class="{
-            'tag': true,
-            'active': tag.id === currentOneTag
-          }"
-          @click="changeOneTag(tag)"
-        >{{ tag.title }}</span>
-      </div>
-      <div
-        v-if="!isSearch"
-        class="two-tags"
-      >
-        <span
-          v-for="tag in twoTags"
-          :key="tag.id"
-          :class="{
-            'tag': true,
-            'active': tag.id === currentTwoTag
-          }"
-          @click="changeTwoTag(tag)"
-        >{{ tag.title }}</span>
-      </div>
       <mescroll-body
         ref="mescrollRef"
         :down="downOption"
@@ -94,7 +66,7 @@
         >
           <div
             class="content"
-            @click="goActivePage"
+            @click="goActivePage(item)"
           >
             <img
               :src="item.img"
@@ -108,18 +80,18 @@
                 {{ item.time }}
               </p>
               <p class="share">
-                <span>{{ parseInt(item.shareCount) }}人分享</span>
-                <span>{{ parseInt(item.visitCount) }}人浏览</span>
-                <span>获客{{ parseInt(item.getClient) }}人</span>
+                <span>{{ parseInt(item.share) || 0 }}人分享</span>
+                <span>{{ parseInt(item.uv) || 0 }}人浏览</span>
+                <span>获客{{ parseInt(item.stayMsg) || 0 }}人</span>
               </p>
               <p class="tag">
                 <span
-                  v-for="(tag, index) in item.tags"
-                  :key="index"
-                >{{ tag }}</span>
+                  v-for="(tag) in item.tags"
+                  :key="tag.id"
+                >{{ tag.name }}</span>
               </p>
             </div>
-            <p class="share-icon" @click.stop="sharePeople">
+            <p v-if="item.diffuseTypeId !== 1" class="share-icon" @click.stop="sharePeople">
               <img src="../../static/img/share.png" alt="">
               <span>分享</span>
             </p>
@@ -133,22 +105,32 @@
 <script>
 import MescrollMixin from '@/uni_modules/mescroll-uni/components/mescroll-uni/mescroll-mixins.js'
 import mescrollBody from '@/uni_modules/mescroll-uni/components/mescroll-body/mescroll-body'
-import eTab from '../../components/tab/index'
+import multTabs from '../../components/multTabs/index'
 import { getClient } from '@/api'
 
 export default {
   components: {
-    eTab,
+    multTabs,
     mescrollBody
   },
   mixins: [MescrollMixin],
   onShow() {
-    const pagearr = getCurrentPages()// 获取应用页面栈
-    const currentPage = pagearr[pagearr.length - 1]// 获取当前页面信息
-    this.currentTab = Number(currentPage.options.tab) 
+    
+  },
+  computed: {
+    currentTabId() {
+      const pagearr = getCurrentPages()
+      const currentPage = pagearr[pagearr.length - 1]
+      return Number(currentPage.options.tab)
+    }
   },
   data() {
     return {
+      activeData: {
+        pv: 0,
+        share: 0,
+        shareActiveCount: 0
+      },
       isLoading: false,
       downOption: {
         use: false,
@@ -160,45 +142,23 @@ export default {
       offset: 0,
       isSearch: false,
       filterRules: '',
-      currentChooseTime: '0',
-      currentOneTag: 0,
-      currentTwoTag: -1,
-      currentTab: 0,
+      currentChooseTime: 1,
+      // currentTabId: 1,
+      currentTagId: 0,
       isFilterCollect: false,
-      oneTags: [ {
-        id: 0,
-        title: '正畸'
-      }, {
-        id: 1,
-        title: '意外+种植'
-      }, {
-        id: 2,
-        title: '蛀牙'
-      }],
-      twoTags: [],
       activeList: [],
-      tabList: [
-        {key: 0, title: '儿童'},
-        {key: 1, title: '青少年'},
-        {key: 2, title: '中青年'},
-        {key: 3, title: '老年'}
-      ],
-      activeData: {
-        allNum: 0,
-        shareNum: 0,
-        visitNum: 0
-      },
+      
       timeArr: [{
-        key: '0',
-        text: '今日'
+        key: 1,
+        text: '24小时'
       }, {
-        key: '-1',
-        text: '昨日'
+        key: 2,
+        text: '48小时'
       }, {
-        key: '7',
+        key: 7,
         text: '近7日'
       }, {
-        key: 'all',
+        key: 0,
         text: '累计'
       }]
     }
@@ -215,33 +175,41 @@ export default {
     this.initPage()
   },
   methods: {
+    renderList(tagId) {
+      this.currentTagId = tagId
+      this.offset = 0
+      this.activeList = []
+      this.getActiveList()
+    },
     sharePeople() {
       uni.showToast({
         title: '吊起后端服务，发送公众号通知',
         icon: 'none'
       })
     },
-    goActivePage() {
-      uni.navigateTo({
-        url: '/pages/active/index'
-      })
+    goActivePage(active) {
+      if (active.diffuseTypeId === 1) {
+        uni.navigateTo({
+          url: '/pages/active/index?activeId=' + active.activeId
+        })
+      }
+      
     },
     initPage() {
-      this.getTwoTags()
       this.getActiveData()
     },
     getActiveData() {
+      const _ = this
       getClient.getActiveData({
-        day: this.currentChooseTime === 'all' ? '' : this.currentChooseTime
-      }).then(data => {
-        this.activeData = data
+        day: _.currentChooseTime
+      }).then(res => {
+        _.activeData = res
       })
     },
     changeOneTag(tag) {
       this.currentOneTag = tag.id
       this.offset = 0
       this.activeList = []
-      this.getTwoTags()
       this.getActiveList()
     },
     changeTwoTag(tag) {
@@ -251,37 +219,33 @@ export default {
       this.getActiveList()
     },
     chanegTab(index) {
-      this.currentTab = index
-      this.offset = 0
-      this.activeList = []
-      this.getTwoTags()
-      this.getActiveList()
+      
     },
     changeTime(item) {
       this.currentChooseTime = item.key
       this.getActiveData()
     },
     beginSearch() {
-      this.isSearch = true
-      this.offset = 0
-      this.activeList = []
-      this.getActiveList()
+      if (this.filterRules) {
+        this.isSearch = true
+        this.offset = 0
+        this.activeList = []
+        this.getActiveList()
+      }
+      
     },
     getActiveList() {
+      if (!this.currentTagId) return
       if (this.isLoading || this.activeList.length === this.listCount) return
       this.isLoading = true
       const sendData = {
-        pagesize: this.pagesize,
+        count: this.pagesize,
         offset: this.offset
       }
       if (this.isSearch) {
         sendData.search = this.filterRules
       } else {
-        sendData.tab = this.tabList[this.currentTab].key 
-        sendData.tag = this.currentOneTag
-        if (this.currentTwoTag !== -1) {
-          sendData.twoTag = this.currentTwoTag
-        }
+        sendData.tagId = this.currentTagId
       }
       getClient.getActiveList(sendData).then(data => {
         if (data.list) {
@@ -294,22 +258,6 @@ export default {
           this.offset += this.pagesize
           this.isLoading = false
           this.mescroll.endSuccess(this.activeList.length, this.activeList.length !== this.listCount) // 必传参数(当前页的数据个数, 是否有下一页true/false)
-        }
-      })
-    },
-    getTwoTags() {
-      // 先初始化在请求
-      this.currentTwoTag = -1
-      getClient.getTags({
-        tabId: this.currentTab,
-        tagId: this.currentOneTag
-      }).then(data => {
-        if (data.list) {
-          this.twoTags = data.list
-          this.twoTags.unshift({
-            id: -1,
-            title: '全部'
-          })
         }
       })
     }
@@ -331,45 +279,6 @@ export default {
   background-color: #fff;
   border-radius: 10rpx;
   overflow: hidden;
-  .one-tags, .two-tags {
-    min-height: 100%;
-    padding: 32rpx 34rpx;
-    font-size: 0;
-    white-space: nowrap;
-    overflow: auto;
-    border-bottom: 1px solid #efeff9;
-    .tag {
-      vertical-align: top;
-      box-sizing: border-box;
-      display: inline-block;
-      font-size: 22rpx;
-      line-height: 54rpx;
-      padding: 0 30rpx;
-      min-width: 158rpx;
-      text-align: center;
-      color: #969696;
-      margin-right: 17rpx;
-      border-radius: 30rpx;
-      background-color: #c5efe0;
-    }
-    .active {
-      background-color: #6fca95;
-      color: #fff;
-    }
-  }
-  .two-tags {
-    border: none;
-    .tag {
-      box-sizing: border-box;
-      border: 1rpx solid #f0f2f4;
-      color: #969696;
-      background-color: #fff;
-    }
-    
-    .active {
-      background-color: #f0f2f4;
-    }
-  } 
   .list {
     margin: 0;
     padding: 0;
@@ -479,14 +388,13 @@ export default {
   .input {
     flex: 1;
     position: relative;
-    .icon {
+    img {
       position: absolute;
-      top: 0;
+      top: 50%;
       left: 20rpx;
-      font-size: 50rpx;
-      font-weight: bold;
-      line-height: 94rpx;
-      color: #6ec995;
+      margin-top: -22rpx;
+      width: 44rpx;
+      height: 44rpx;
     }
     input {
       height: 94rpx;

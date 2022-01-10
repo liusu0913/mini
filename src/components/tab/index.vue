@@ -15,7 +15,7 @@
             :class="[
               index === current ? 'font_active': '']"
           >
-            {{ item.title || item }}
+            {{ item.name || item.title || item }}
           </text>
           <view v-if="index === current">
             <image
@@ -52,7 +52,7 @@
               :class="[
                 index === current ? 'more-font_active': '']"
             >
-              {{ item.title || item }}
+              {{ item.name || item.title || item }}
             </text>
             <view v-if="index === current">
               <image

@@ -3,7 +3,7 @@ import http from '@/libs/request'
 export default {
   getActiveList(data) {
     return http.request({
-      url: '/get/activeList',
+      url: '/mini/active/list',
       method: 'post',
       data
     })
@@ -15,11 +15,11 @@ export default {
       params
     })
   },
-  getActiveData(params) {
+  getActiveData(data) {
     return http.request({
-      url: '/get/activeData',
-      method: 'get',
-      params
+      url: '/mini/active/data',
+      method: 'post',
+      data
     })
   }
 }

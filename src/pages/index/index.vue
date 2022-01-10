@@ -33,21 +33,9 @@
         </div>
       </div>
       <ul class="nav">
-        <li @click="goWinCustomer(0)">
-          <img src="https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/nav-1.png" alt="">
-          <p>儿童</p>
-        </li>
-        <li @click="goWinCustomer(1)">
-          <img src="https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/nav-2.png" alt="">
-          <p>青少年</p>
-        </li>
-        <li @click="goWinCustomer(2)">
-          <img src="https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/nav-3.png" alt="">
-          <p>中青年</p>
-        </li>
-        <li @click="goWinCustomer(3)">
-          <img src="https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/nav-4.png" alt="">
-          <p>老年</p>
+        <li v-for="nav in navList" @click="goWinCustomer(nav.id)" :key="nav.id">
+          <img :src="nav.url" />
+          <p>{{nav.nav}}</p>
         </li>
       </ul>
       <div class="fodder">
@@ -61,22 +49,22 @@
         <div class="content">
           <div
             class="item"
-            @click="goSendMorePage(0)"
+            @click="goSendMorePage(1)"
           >
             <img src="https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/tips-1.png">
             <div class="data">
               <p>群发提醒</p>
-              <p class="num"><i>{{ sopTips.unreadCount }}</i>/{{ sopTips.allCount }}</p>
+              <p class="num"><i>{{ sopTips.moreSend.unread }}</i>/{{ sopTips.moreSend.all }}</p>
             </div>
           </div>
           <div
             class="item"
-            @click="goSendMorePage(1)"
+            @click="goSendMorePage(2)"
           >
             <img src="https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/tips-2.png">
             <div class="data">
               <p>朋友圈发送提醒</p>
-              <p class="num"><i>{{ friendTips.unreadCount }}</i>/{{ friendTips.allCount }}</p>
+              <p class="num"><i>{{ sopTips.friend.unread }}</i>/{{ sopTips.friend.all }}</p>
             </div>
           </div>
         </div>
@@ -88,7 +76,13 @@
 <script>
 import { mapGetters } from 'vuex'
 import LoginPage from '../login/index'
-import { home as homeApi } from '@/api'
+import { home as homeApi, getTags } from '@/api'
+const navIconMap = new Map();
+
+navIconMap.set('儿童', 'https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/nav-1.png')
+navIconMap.set('青少年', 'https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/nav-2.png')
+navIconMap.set('中青年', 'https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/nav-3.png')
+navIconMap.set('老年', 'https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/nav-4.png')
 export default {
   name: 'Index',
   components: {
@@ -96,6 +90,7 @@ export default {
   },
   data () {
     return {
+      navList: [],
       boardData: {
         rank: 0,
         newAddNum: 10,
@@ -105,12 +100,14 @@ export default {
         yesterdayUp: true
       },
       sopTips: {
-        allCount: 0,
-        unreadCount: 0
-      },
-      friendTips: {
-        allCount: 0,
-        unreadCount: 0
+        moreSend: {
+          all: 0,
+          unread: 0
+        },
+        friend: {
+          all: 0,
+          unread: 0
+        }
       }
     }
   },
@@ -125,13 +122,17 @@ export default {
       this.initTabBar()
     }
   },
-  mounted () {
+  onShow () {
     this.initTabBar()
   },
   methods: {
     goSendMorePage(type) {
-      uni.navigateTo({
-        url: `/pages/moreSend/index?type=${type}`
+      homeApi.readSopTips({
+        type
+      }).then(() => {
+        uni.navigateTo({
+          url: `/pages/moreSend/index?type=${type}`
+        })
       })
     },
     goFodderPage(id) {
@@ -155,6 +156,21 @@ export default {
       }
     },
     initHomeData() {
+      // 初始化导航
+      getTags.list({
+        count: 100,
+        offset: 0,
+        fatherId: 0
+      }).then(res => {
+        this.navList = []
+        res.list.forEach(item => {
+          this.navList.push({
+            nav: item.name,
+            id: item.id,
+            url: navIconMap.get(item.name)
+          })
+        })
+      })
       // 初始化主页的数据
       homeApi.getRank().then(({ rank }) => {
         if (rank) {
@@ -176,18 +192,9 @@ export default {
           this.boardData.todayUp = todayUp
         }
       })
-      homeApi.getSopTips().then(({ allCount, unreadCount }) => {
-        if (allCount) {
-          this.sopTips.allCount = parseInt(allCount)
-          this.sopTips.unreadCount = parseInt(unreadCount)
-        }
-      })
-
-      homeApi.getFriendTips().then(({ allCount, unreadCount }) => {
-        if (allCount) {
-          this.friendTips.allCount = parseInt(allCount)
-          this.friendTips.unreadCount = parseInt(unreadCount)
-        }
+      // 获取首页的提醒消息
+      homeApi.getSopTips().then((res) => {
+        this.sopTips = res
       })
     },
     editUser() {
