@@ -10,7 +10,14 @@ export default {
   },
   info(data) {
     return http.request({
-      url: '/get/user/info',
+      url: '/mini/wxuser/info',
+      method: 'post',
+      data
+    })
+  },
+  activeHistroy(data) {
+    return http.request({
+      url: '/mini/wxuser/visitHistroy',
       method: 'post',
       data
     })

@@ -1,23 +1,22 @@
 <template>
   <view class="box">
     <view class="user">
-      <img :src="userInfo.img">
+      <img :src="userInfo.avatar">
       <view class="intr">
         <p class="name">
           {{ userInfo.name }}
-          <span v-if="userInfo.hasStay">未留资</span>
+          <span v-if="!userInfo.phone">未留资</span>
         </p>
         <p class="data">
           <span class="recommend">推荐度{{ parseInt(userInfo.recommend) }}%</span>
-          <span>活跃度{{ parseInt(userInfo.active) }}%</span>
-          <span>影响人数{{ parseInt(userInfo.affect) }}</span>
+          <span>最初来源 {{ userInfo.sourceOpenId ? '用户引导' : '直接访问'}}</span>
         </p>
       </view>
     </view>
     <view class="board">
       <p>
         <span>活跃度</span>
-        {{ parseInt(userInfo.active) }}
+        {{ parseInt(userInfo.weekActive) }}
       </p>
       <p>
         <span>近30天活跃</span>
@@ -25,9 +24,10 @@
       </p>
       <p class="people">
         <span>TA的人脉</span>
-        {{ parseInt(userInfo.people) }}
+        {{ parseInt(userInfo.effectCount) }}
       </p>
     </view>
+    <!-- 历史记录 -->
     <view class="list">
       <view class="tag">
         <span
@@ -35,37 +35,51 @@
           :key="index"
         >{{ tag }}</span>
       </view>
-      <view
-        v-for="(item, index) in userInfo.list"
-        :key="index"
-        class="item"
+       <mescroll-body
+        ref="mescrollRef"
+        :down="downOption"
+        @init="mescrollInit"
+        @up="getActiveHistroy"
       >
-        <view class="head">
-          <view class="source">
-            来自{{ item.source }}
+        <view
+          v-for="(item, index) in activeHistroy"
+          :key="index"
+          class="item"
+        >
+          <view class="head">
+            <view class="source">
+              来自{{ item.sourceUser ? `${item.sourceUser.name}用户分享` : '直接访问' }}
+            </view>
+            <view class="time">
+              最后访问{{ item.updatedAt | date_format }}
+            </view>
           </view>
-          <view class="time">
-            最后访问{{ item.time }}
+          <view class="title">
+            {{ item.active.title || '-' }}
+          </view>
+          <view class="tags">
+            <span
+              v-for="(tag, i) in item.tags"
+              :key="i"
+            >{{ tag }}</span>
           </view>
         </view>
-        <view class="title">
-          {{ item.title }}
-        </view>
-        <view class="tags">
-          <span
-            v-for="(tag, i) in item.tags"
-            :key="i"
-          >{{ tag }}</span>
-        </view>
-      </view>
+       </mescroll-body>
+     
     </view>
   </view>
 </template>
 
 <script>
 import { getUser } from '@/api'
+import MescrollMixin from '@/uni_modules/mescroll-uni/components/mescroll-uni/mescroll-mixins.js'
+import mescrollBody from '@/uni_modules/mescroll-uni/components/mescroll-body/mescroll-body'
 
 export default {
+  components: {
+    mescrollBody
+  },
+  mixins: [MescrollMixin],
   onShow() {
     const pagearr = getCurrentPages()// 获取应用页面栈
     const currentPage = pagearr[pagearr.length - 1]// 获取当前页面信息
@@ -73,21 +87,51 @@ export default {
   },
   data() {
     return {
+      downOption: {
+        use: false,
+        auto: false,
+        textNoMore: '--- 到底了 ---'
+      },
       userId: 0,
       userInfo: {
-      }
+      },
+      listCount: 20,
+      pagesize: 20,
+      offset: 0,
+      isLoading: false,
+      activeHistroy: []
     }
   },
   mounted() {
     getUser.info({
-      id: this.userId
+      openId: this.userId
     }).then(data => {
-      console.log(data)
       this.userInfo = data
     })
   },
   methods: {
-
+    getActiveHistroy() {
+      if (this.isLoading || this.activeHistroy.length === this.listCount) return
+      this.isLoading = true
+      getUser.activeHistroy({
+        count: this.pagesize,
+        offset: this.offset,
+        openId: this.userId
+      }).then(data => {
+        console.log(data.list)
+        if (data.list) {
+          if (this.offset) {
+            this.activeHistroy = this.activeHistroy.concat(data.list)
+          } else {
+            this.activeHistroy = data.list
+          }
+          this.listCount = data.count
+          this.offset += this.pagesize
+          this.isLoading = false
+          this.mescroll.endSuccess(this.activeHistroy.length, this.activeHistroy.length !== this.listCount) // 必传参数(当前页的数据个数, 是否有下一页true/false)
+        }
+      })
+    }
   }
 }
 </script>

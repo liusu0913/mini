@@ -3,7 +3,7 @@ import http from '@/libs/request'
 export default {
   getFodderList(data) {
     return http.request({
-      url: '/get/fodder/list',
+      url: '/mini/fodder/list',
       method: 'post',
       data
     })

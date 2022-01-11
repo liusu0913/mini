@@ -15,7 +15,7 @@ export default {
       title: '前端开发工程师',
       phone: '15811240124'
     },
-    isLogin: false
+    isLogin: !!uni.getStorageSync('mini_token')
   },
   mutations: {
     setUserInfo(state, info) {

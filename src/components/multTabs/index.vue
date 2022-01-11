@@ -47,8 +47,11 @@ export default {
   mounted() {
     this.getList(0, (list) => {
       this.currentNavIndex = list.findIndex(nav => nav.id === this.defaultNavId)
+      if (this.currentNavIndex === -1) {
+        this.currentNavIndex = 0
+      } 
       this.navList =list
-      this.currentNavId = this.defaultNavId
+      this.currentNavId = this.navList[this.currentNavIndex].id
     })
   },
   components: {

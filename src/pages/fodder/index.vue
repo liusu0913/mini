@@ -9,11 +9,10 @@
           {{ currentFodder.title }}
           <span @click="closeDialog">X</span>
         </div>
-        <div class="time">{{ currentFodder.time }}</div>
-
+        <div class="time">{{ currentFodder.updatedAt | date_format }}</div>
         <div class="content">
           <div class="txt">
-            {{ currentFodder.text }}
+            {{ currentFodder.content }}
           </div>
           <div class="source">
             他人引荐
@@ -32,8 +31,8 @@
     <div class="head">
       <div class="search">
         <div class="input">
-          <span
-            class="icon icon-search"
+          <img
+            src="../../static/img/search.png"
             @click="beginSearch"
           />
           <input
@@ -44,26 +43,10 @@
         </div>
       </div>
       <div class="items">
-        <eTab
-          v-if="!isSearch"
-          :active-tab="currentTab"
-          :tab-list="tabList"
-          @change="chanegTab"
+        <multTabs 
+          v-if="!isSearch" 
+          @tagChange="renderList" 
         />
-        <div
-          v-if="!isSearch"
-          class="tags"
-        >
-          <span
-            v-for="tag in tags"
-            :key="tag.id"
-            :class="{
-              'tag': true,
-              'active': tag.id === currentChooseTag
-            }"
-            @click="changeTag(tag)"
-          >{{ tag.title }}</span>
-        </div>
       </div>
     </div>   
     <div class="list">
@@ -81,9 +64,9 @@
           <view class="content">
             <view class="card-head">
               <span class="title">{{ item.title }}</span>
-              <span class="time">{{ item.time }}</span>
+              <span class="time">{{ item.updatedAt | date_format }}</span>
             </view>
-            <view class="txt">{{ item.text }}</view>
+            <view class="txt">{{ item.content }}</view>
           </view>
           <view
             class="foot"
@@ -98,21 +81,21 @@
 </template>
 
 <script>
-import eTab from '../../components/tab/index'
+import multTabs from '../../components/multTabs/index'
 import MescrollMixin from '@/uni_modules/mescroll-uni/components/mescroll-uni/mescroll-mixins.js'
 import mescrollBody from '@/uni_modules/mescroll-uni/components/mescroll-body/mescroll-body'
 import { getFodder } from '@/api'
 
 export default {
   components: {
-    eTab,
+    multTabs,
     mescrollBody
   },
   mixins: [MescrollMixin],
   onShow() {
     const pagearr = getCurrentPages()// 获取应用页面栈
     const currentPage = pagearr[pagearr.length - 1]// 获取当前页面信息
-    this.pageType = currentPage.options.id
+    this.pageType = currentPage.options.type
   },
   data() {
     return {
@@ -126,42 +109,32 @@ export default {
         auto: false,
         textNoMore: '--- 到底了 ---'
       },
-      pageType: 1,
+      pageType: 0,
       pagesize: 20,
       offset: 0,
       isSearch: false,
       filterRules: '',
-      currentChooseTime: '0',
-      currentChooseTag: 'all',
-      currentTab: 0,
-      isFilterCollect: false,
-      tags: [],
+      currentTagId: 0,
       fodderList: [],
-      tabList: [],
-      activeData: {
-        allNum: 0,
-        shareNum: 0,
-        visitNum: 0
-      }
     }
   },
   watch: {
     filterRules(value) {
       if (value === '') {
         this.isSearch = false
+        this.offset = 0
+        this.fodderList = []
         this.getFodderList()
       }
+    },
+    currentTagId() {
+      this.initPage()
     }
   },
-  mounted() {
-    getFodder.getFodderTab({
-      type: this.pageType
-    }).then(data => {
-      this.tabList = data.tabs
-      this.initPage()
-    })
-  },
   methods: {
+    renderList(tagId) {
+      this.currentTagId = tagId
+    },
     openDialog(item) {
       this.dialogIsShow = true
       this.currentFodder = item
@@ -188,29 +161,6 @@ export default {
     initPage() {
       this.offset = 0
       this.fodderList = []
-      this.getTabTags()
-      this.getFodderList()
-    },
-    getTabTags() {
-      getFodder.getTabTags({
-        id: this.tabList[this.currentTab].id
-      }).then(data => {
-        this.tags = data.tags
-        this.tags.unshift({
-          title: '全部',
-          id: 'all'
-        })
-      })
-    },
-    chanegTab(index) {
-      this.currentChooseTag = 'all'
-      this.currentTab = index
-      this.initPage()
-    },
-    changeTag(tag) {
-      this.currentChooseTag = tag.id
-      this.offset = 0
-      this.fodderList = []
       this.getFodderList()
     },
     beginSearch() {
@@ -222,19 +172,18 @@ export default {
       }
     },
     getFodderList() {
-      if (!this.tabList.length || this.fodderList.length === this.listCount || this.isLoading) return
+      console.log(this.fodderList.length === this.listCount , this.isLoading ,(this.currentTagId === 0 ))
+      if (this.fodderList.length === this.listCount || this.isLoading ||(this.currentTagId === 0 )) return
       this.isLoading = true
       const sendData = {
-        pagesize: this.pagesize,
-        offset: this.offset
+        count: this.pagesize,
+        offset: this.offset,
+        type: Number(this.pageType),
       }
       if (this.isSearch) {
         sendData.search = this.filterRules
       } else {
-        sendData.tab = this.tabList[this.currentTab].id
-        if (this.currentChooseTag !== 'all') {
-          sendData.tag = this.currentChooseTag
-        }
+        sendData.tagId = this.currentTagId
       }
       getFodder.getFodderList(sendData).then(data => {
         if (data.list) {
@@ -356,7 +305,6 @@ export default {
         display: flex;
         line-height: 80rpx;
         .title {
-          flex: 1;
           font-size: 28rpx;
           font-weight: bold;
           white-space: nowrap;
@@ -395,29 +343,6 @@ export default {
   background-color: #fff;
   border-radius: 10rpx;
   overflow: hidden;
-  .tags {
-    margin-top: 35rpx;
-    font-size: 0;
-    .tag {
-      vertical-align: top;
-      box-sizing: border-box;
-      display: inline-block;
-      font-size: 22rpx;
-      line-height: 54rpx;
-      padding: 0 30rpx;
-      min-width: 150rpx;
-      text-align: center;
-      color: #969696;
-      margin-right: 15rpx;
-      margin-bottom: 18rpx;
-      border-radius: 30rpx;
-      background-color: #c5efe0;
-    }
-    .active {
-      background-color: #6fca95;
-      color: #fff;
-    }
-  }
 
 }
 .search {
@@ -429,14 +354,13 @@ export default {
   .input {
     flex: 1;
     position: relative;
-    .icon {
+    img {
       position: absolute;
-      top: 0;
+      top: 50%;
       left: 20rpx;
-      font-size: 50rpx;
-      font-weight: bold;
-      line-height: 94rpx;
-      color: #6ec995;
+      margin-top: -22rpx;
+      width: 44rpx;
+      height: 44rpx;
     }
     input {
       height: 94rpx;

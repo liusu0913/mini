@@ -135,9 +135,9 @@ export default {
         })
       })
     },
-    goFodderPage(id) {
+    goFodderPage(type) {
       uni.navigateTo({
-        url: `/pages/fodder/index?id=${id}`
+        url: `/pages/fodder/index?type=${type}`
       })
     },
     initTabBar() {
