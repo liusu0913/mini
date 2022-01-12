@@ -61,12 +61,12 @@
       >
         <div
           class="item"
-          v-for="item in activeList"
-          :key="item.id"
+          v-for="(item, index) in activeList"
+          :key="index"
         >
           <div
-            class="content"
             @click="goActivePage(item)"
+            class="content"
           >
             <img
               :src="item.img"
@@ -121,7 +121,10 @@ export default {
     currentTabId() {
       const pagearr = getCurrentPages()
       const currentPage = pagearr[pagearr.length - 1]
-      return Number(currentPage.options.tab)
+      if (currentPage.options) {
+        return Number(currentPage.options.tab)
+      }
+      return 1
     }
   },
   data() {

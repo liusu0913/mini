@@ -8,6 +8,13 @@ export default {
       data
     })
   },
+  getActiveInfo(data) {
+    return http.request({
+      url: '/mini/active/info',
+      method: 'post',
+      data
+    })
+  },
   getTags(params) {
     return http.request({
       url: '/get/tags',

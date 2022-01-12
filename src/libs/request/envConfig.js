@@ -3,6 +3,10 @@ const envUrlMap = {
   mock: {
     url: 'http://localhost:3000',
     apis: [
+      '/mini/active/info',
+      '/mini/user/update',
+      '/common/getCosConfig',
+      '/mini/user/info',
       '/mini/wxuser/info',
       '/mini/wxuser/visitHistroy',
       '/mini/activeRemind/getMsgCount',

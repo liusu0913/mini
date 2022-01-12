@@ -4,10 +4,10 @@
       <li>
         <span>头像<i>*</i></span>
         <img
-        class="headerPic"
-          :src="userInfo.img"
+          class="headerPic"
+          :src="userInfo.avatar"
         >
-        <i class="arrowIcon"></i>
+        <i class="arrowIcon" @click="changeImg"></i>
       </li>
       <li>
         <span>姓名<i>*</i></span>
@@ -36,6 +36,8 @@
 </template>
 
 <script>
+import Cos from 'cos-wx-sdk-v5'
+import {common, user} from '@/api'
 import {
   mapGetters, mapMutations
 } from 'vuex'
@@ -43,17 +45,9 @@ import {
 export default {
   data() {
     return {
+      bucket: 'img-1303063528',
+      region: 'ap-shanghai',
       userInfo: {
-        name: '',
-        img: '',
-        company: '',
-        city: '',
-        intr: '',
-        wChat: 'wx',
-        selfChatCode: 'https://rocket-dev.woa.com/images/rocket.png',
-        companyChatCode: '',
-        title: '前端开发工程师',
-        phone: '15811240124'
       },
       items: [{
         value: 'cwx',
@@ -77,21 +71,87 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setUser: 'user/setUserInfo'
+      updateUserInfo: 'user/updateUserInfo',
     }),
+    changeImg() {
+      let that = this
+      uni.chooseImage({
+        count: 1,	// 默认为9
+        sizeType: ['original'],	// 指定原图或者压缩图
+        sourceType: ['album', 'camera'],	// 指定图片来源
+        success: function(res) {
+          const {tempFilePaths} = res
+          const cos = that.createCos()
+          if (tempFilePaths) {
+             let filename = tempFilePaths[0].substr(tempFilePaths[0].lastIndexOf('/') + 1);
+             cos.postObject({
+                Bucket: that.bucket,
+                Region: that.region,
+                Key: filename,
+                FilePath: tempFilePaths[0],
+                onProgress: info => {
+                  console.log(JSON.stringify(info));
+                }
+              }, (err, data) => {
+                if (err === null) {
+                  that.userInfo.avatar = `https://${data.Location}`
+                } else {
+                  wx.hideLoading();
+                  wx.showToast({
+                    title: '上传失败',
+                    icon: 'none'
+                  })
+                }
+              });
+          } else {
+            uni.showToast({
+              icon: 'none',
+              title: '图片选择失败'
+            })
+          }
+        }
+      })
+    },
     editUserMsg() {
-      if (this.userInfo.name) {
-        this.setUser(this.userInfo)
-        wx.showToast({
-          icon: 'none',
-          title: '保存成功'
+      if (this.userInfo.jobId) {
+        this.updateUserInfo(this.userInfo)
+        user.update({
+          ...this.userInfo
+        }).then(data => {
+          wx.showToast({
+            icon: 'none',
+            title: '保存成功'
+          })
+          uni.navigateBack()
+        }).catch((err) => {
+          wx.showToast({
+            icon: 'none',
+            title: '保存失败，请重试'
+          })
         })
-        uni.navigateBack()
+        
       }
     },
-    radioChange(key) {
-      console.log(key)
-      this.userInfo.wChat = key
+    createCos() {
+      const that = this
+      return new Cos({
+        // 异步获取签名
+        getAuthorization: function (options, callback) {
+          common.getCosConfig({
+            bucket: that.bucket,
+            region: that.region
+          }).then(config => {
+            console.log(config)
+            callback({
+              TmpSecretId: config.credentials.tmpSecretId,
+              TmpSecretKey: config.credentials.tmpSecretKey,
+              XCosSecurityToken: config.credentials.sessionToken,
+              ExpiredTime: config.expiredTime,
+              FileParallelLimit: 1
+            })
+          })
+        }
+      })
     }
   }
 }

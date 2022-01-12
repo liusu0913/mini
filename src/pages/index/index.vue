@@ -7,7 +7,7 @@
     >
       <header class="header">
         <div class="user">
-          <img :src="info.img">
+          <img :src="info.avatar">
           <div class="intr">
             <p class="name">
               {{ info.name }}
@@ -76,7 +76,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import LoginPage from '../login/index'
-import { home as homeApi, getTags } from '@/api'
+import { home as homeApi, getTags, user } from '@/api'
+import { mapMutations } from 'vuex'
+
 const navIconMap = new Map();
 
 navIconMap.set('儿童', 'https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/nav-1.png')
@@ -126,6 +128,9 @@ export default {
     this.initTabBar()
   },
   methods: {
+    ...mapMutations({
+      setUserInfo: 'user/setUserInfo'
+    }),
     goSendMorePage(type) {
       homeApi.readSopTips({
         type
@@ -156,6 +161,9 @@ export default {
       }
     },
     initHomeData() {
+      user.info().then((data) => {
+        this.setUserInfo(data)
+      })
       // 初始化导航
       getTags.list({
         count: 100,

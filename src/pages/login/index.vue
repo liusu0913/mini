@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setUserInfo: 'user/setUserInfo'
+      setUserLogin: 'user/setUserLogin'
     }),
     userLogin() {
       if (this.code && this.jobNumber && this.iphone) {
@@ -77,7 +77,8 @@ export default {
           jobNumber: this.jobNumber,
           iphone: this.iphone
         }).then(data => {
-          this.setUserInfo(data)
+          uni.setStorageSync('mini_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqb2JJZCI6IjEwMDAxIiwibmFtZSI6IueOi-S6lCIsInBob25lIjoiMTg4ODg4ODg4ODgiLCJjb21wYW55SWQiOiI4NiIsInJvbGUiOjMsImJlbG9uZ0NvbXBhbnkiOjEsImlhdCI6MTY0MTcxNDQ2NCwiZXhwIjoxNjQyMzE5MjY0fQ.8ogT_LXpkmk5rCZ9DKrGTXQJmI-ZHHrgQjHDfJk14D0');
+          this.setUserLogin(true)
         })
       } else {
         wx.showToast({

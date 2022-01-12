@@ -8,7 +8,7 @@
           <span v-if="!userInfo.phone">未留资</span>
         </p>
         <p class="data">
-          <span class="recommend">推荐度{{ parseInt(userInfo.recommend) }}%</span>
+          <span class="recommend">{{ userInfo.finer ? `推荐度 ${userInfo.finer}%` : '不推荐' }}</span>
           <span>最初来源 {{ userInfo.sourceOpenId ? '用户引导' : '直接访问'}}</span>
         </p>
       </view>
@@ -118,7 +118,6 @@ export default {
         offset: this.offset,
         openId: this.userId
       }).then(data => {
-        console.log(data.list)
         if (data.list) {
           if (this.offset) {
             this.activeHistroy = this.activeHistroy.concat(data.list)
@@ -128,6 +127,7 @@ export default {
           this.listCount = data.count
           this.offset += this.pagesize
           this.isLoading = false
+          console.log(this.activeHistroy.length, this.listCount)
           this.mescroll.endSuccess(this.activeHistroy.length, this.activeHistroy.length !== this.listCount) // 必传参数(当前页的数据个数, 是否有下一页true/false)
         }
       })
@@ -211,28 +211,29 @@ export default {
     }
   }
 }
+.tag {
+  font-size: 0;
+  padding: 32rpx 0;
+  white-space: nowrap;
+  overflow: auto;
+  span {
+    height: 54rpx;
+    line-height: 54rpx;
+    padding: 0 36rpx;
+    display: inline-block;
+    color: #fff;
+    font-size: 22rpx;
+    font-weight: 400;
+    text-align: center;
+    background-color:#5dc096;
+    border-radius: 30rpx;
+    margin-right: 15rpx;
+  }
+}
 .list {
   background-color: #fff;
   padding: 20rpx 20rpx;
-  .tag {
-    font-size: 0;
-    padding: 32rpx 0;
-    white-space: nowrap;
-    overflow: auto;
-    span {
-      height: 54rpx;
-      line-height: 54rpx;
-      padding: 0 36rpx;
-      display: inline-block;
-      color: #fff;
-      font-size: 22rpx;
-      font-weight: 400;
-      text-align: center;
-      background-color:#5dc096;
-      border-radius: 30rpx;
-      margin-right: 15rpx;
-    }
-  }
+  
   .item {
     padding: 30rpx 40rpx;
     background-color: #f7f9fd;

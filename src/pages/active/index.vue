@@ -72,12 +72,14 @@
 
 <script>
 
+import {getClient} from '@/api'
 import { getSharePoster } from '@/libs/utils/QS-SharePoster/QS-SharePoster.js'
 import { mapGetters } from 'vuex'
 
 export default {
   data () {
     return {
+      active: {},
       messageArr: ['头像', '姓名', '职位', '手机号'],
       defaultMessageChose: [0, 1, 2, 3],
       addressArr: ['上边', '下边'],
@@ -116,14 +118,22 @@ export default {
       this.initPage(this.changeCardRendaer())
     }
   },
-  mounted() {
+  onShow() {
     const that = this
-    const query = wx.createSelectorQuery()
-    // 选择class id
-    query.select('.content').boundingClientRect(function (rect) {
-      that.$set(that.bgConfig, 'height', rect.height - uni.upx2px(220))
-      that.$set(that.bgConfig, 'all', rect.height - uni.upx2px(20))
-    }).exec()
+    const pagearr = getCurrentPages()// 获取应用页面栈
+    const currentPage = pagearr[pagearr.length - 1]// 获取当前页面信息
+    getClient.getActiveInfo({
+      activeId: currentPage.options.activeId
+    }).then(data => {
+      that.active = data
+      const query = uni.createSelectorQuery()
+      // 选择class id
+      query.select('.content').boundingClientRect(function (rect) {
+        that.$set(that.bgConfig, 'height', rect.height - uni.upx2px(220))
+        that.$set(that.bgConfig, 'all', rect.height - uni.upx2px(20))
+      }).exec()
+    })
+    
   },
   methods: {
     goEditPage() {
@@ -228,7 +238,7 @@ export default {
           return {
             type: 'image', // 绘制类型, 详见上方 绘制类型大纲
             // ...对应type的属性, 详见下方
-            url: '/static/logo.png',
+            url: that.info.avatar,
             dx: uni.upx2px(10),
             dy: isTop ? uni.upx2px(0) : 10 + bgConfig.height,
             dWidth: uni.upx2px(127),
@@ -285,7 +295,7 @@ export default {
       getSharePoster({
         that,
         posterCanvasId: 'canvasId', // canvasId
-        backgroundImage: '/static/bg.png', // 背景图片路径, 画布会跟随图片的实际像素, 并绘制为背景, 请不要使背景图片的像素太大
+        backgroundImage: that.active.img, // 背景图片路径, 画布会跟随图片的实际像素, 并绘制为背景, 请不要使背景图片的像素太大
         bgConfig,
         qrCodeArray: () => {
           return [{

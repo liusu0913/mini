@@ -10,19 +10,31 @@ export default {
   },
   state: {
     info: {
-      name: '刘先生',
-      img: 'https://rocket-dev.woa.com/images/rocket.png',
-      title: '前端开发工程师',
-      phone: '15811240124'
+      name: '',
+      avatar: '',
+      title: '',
+      phone: ''
     },
     isLogin: !!uni.getStorageSync('mini_token')
   },
   mutations: {
     setUserInfo(state, info) {
+      if (!info.avatar) {
+        info.avatar = 'https://rocket-dev.woa.com/images/rocket.png'
+      }
       if (info.name) {
         state.info = info
         state.isLogin = true
       }
+    },
+    updateUserInfo(state, info) {
+      state.info = {
+        ...state.info,
+        ...info
+      }
+    },
+    setUserLogin(state, isLogin) {
+      state.isLogin = isLogin
     }
   }
 }
