@@ -89,6 +89,10 @@ http.interceptors.response.use(
             )
             // location.href = '/account/login'
           } else {
+            uni.showToast({
+              title: message,
+              icon: 'none'
+            })
             // 不是正确的 code
             errorCreate(
               `[ code: ${code} ] ${message}: ${response.config.url}`

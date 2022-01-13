@@ -16,22 +16,23 @@
     <view class="board">
       <p>
         <span>活跃度</span>
-        {{ parseInt(userInfo.weekActive) }}
+        {{ userInfo.weekActive || 0 }}
       </p>
       <p>
         <span>近30天活跃</span>
-        {{ parseInt(userInfo.monthActive) }}
+        {{ (userInfo.monthActive) || 0 }}
       </p>
       <p class="people">
         <span>TA的人脉</span>
-        {{ parseInt(userInfo.effectCount) }}
+        {{ (userInfo.effectCount) || 0 }}
       </p>
     </view>
+    
     <!-- 历史记录 -->
     <view class="list">
       <view class="tag">
         <span
-          v-for="(tag, index) in userInfo.tags"
+          v-for="(tag, index) in userTags"
           :key="index"
         >{{ tag }}</span>
       </view>
@@ -55,7 +56,7 @@
             </view>
           </view>
           <view class="title">
-            {{ item.active.title || '-' }}
+            {{ item.active ? item.active.title : '-' }}
           </view>
           <view class="tags">
             <span
@@ -87,6 +88,7 @@ export default {
   },
   data() {
     return {
+      userTags: [],
       downOption: {
         use: false,
         auto: false,
@@ -103,10 +105,24 @@ export default {
     }
   },
   mounted() {
+    const tagMap = {
+      commend: '已参与',
+      regular: '已留资',
+      share: '已分享'
+    }
     getUser.info({
       openId: this.userId
     }).then(data => {
       this.userInfo = data
+    })
+    getUser.getUserTags({
+      openId: this.userId
+    }).then(data => {
+      Object.keys(data).forEach(key => {
+        if (data[key] && tagMap[key]) {
+          this.userTags.push(tagMap[key])
+        }
+      });
     })
   },
   methods: {
@@ -127,7 +143,6 @@ export default {
           this.listCount = data.count
           this.offset += this.pagesize
           this.isLoading = false
-          console.log(this.activeHistroy.length, this.listCount)
           this.mescroll.endSuccess(this.activeHistroy.length, this.activeHistroy.length !== this.listCount) // 必传参数(当前页的数据个数, 是否有下一页true/false)
         }
       })
@@ -233,7 +248,6 @@ export default {
 .list {
   background-color: #fff;
   padding: 20rpx 20rpx;
-  
   .item {
     padding: 30rpx 40rpx;
     background-color: #f7f9fd;

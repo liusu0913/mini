@@ -21,10 +21,10 @@
       <div class="board">
         <div class="user-number item">
           <p>用户数</p>
-          <span>{{ boardData.newAddNum }}</span>
+          <span>{{ boardData.total }}</span>
           <div class="data">
-            <i :class="[`${boardData.todayUp ? 'up' : 'down'}`]">今日 {{ boardData.todayCount }}</i>
-            <i :class="[`${boardData.yesterdayUp ? 'up' : 'down'}`]">昨日 {{ boardData.yesterdayCount }}</i>
+            <i :class="[`${boardData.today ? 'up' : ''}`]">今日 {{ boardData.today }}</i>
+            <i :class="[`${boardData.yesterday ? 'up' : ''}`]">昨日 {{ boardData.yesterday }}</i>
           </div>
         </div>
         <div class="ranking item">
@@ -94,12 +94,10 @@ export default {
     return {
       navList: [],
       boardData: {
-        rank: 0,
-        newAddNum: 10,
-        todayCount: 0,
-        yesterdayCount: 0,
-        todayUp: true,
-        yesterdayUp: true
+        rank: '-',
+        today: 0,
+        yesterday: 0,
+        total: 0
       },
       sopTips: {
         moreSend: {
@@ -180,25 +178,15 @@ export default {
         })
       })
       // 初始化主页的数据
-      homeApi.getRank().then(({ rank }) => {
-        if (rank) {
-          this.boardData.rank = rank
+      homeApi.getRank().then((res) => {
+        if (res.rank) {
+          this.boardData.rank = res.rank
         }
       })
-      homeApi.getNewAdd(({
-        newAddCount,
-        todayCount,
-        todayUp,
-        yesterdayCount,
-        yesterdayUp
-      }) => {
-        if (newAddCount) {
-          this.boardData.newAddNum = parseInt(newAddCount)
-          this.boardData.todayCount = parseInt(todayCount)
-          this.boardData.yesterdayCount = parseInt(yesterdayCount)
-          this.boardData.yesterdayUp = yesterdayUp
-          this.boardData.todayUp = todayUp
-        }
+      homeApi.getNewAdd().then(res => {
+        this.boardData.today = res.today
+        this.boardData.yesterday = res.yesterday
+        this.boardData.total = res.total || 0
       })
       // 获取首页的提醒消息
       homeApi.getSopTips().then((res) => {

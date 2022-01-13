@@ -5,7 +5,7 @@
       <div class="job-number item">
         <p>员工工号</p>
         <input
-          v-model="jobNumber"
+          v-model="jobId"
           class="uni-input"
           placeholder="请输入员工工号"
         >
@@ -13,7 +13,7 @@
       <div class="phone item">
         <p>手机号</p>
         <input
-          v-model="iphone"
+          v-model="phone"
           class="uni-input"
           placeholder="请输入手机号"
         >
@@ -56,8 +56,8 @@ export default {
   name: 'Index',
   data () {
     return {
-      jobNumber: '',
-      iphone: '',
+      jobId: '10001',
+      phone: '15811240124',
       code: '',
       codeBtnTxt: '获取验证码',
       timeNum: 60,
@@ -71,33 +71,44 @@ export default {
       setUserLogin: 'user/setUserLogin'
     }),
     userLogin() {
-      if (this.code && this.jobNumber && this.iphone) {
+      if (!this.code) {
+        wx.showToast({
+          title: '请输入验证码',
+          icon: 'none',
+          duration: 1500
+        })
+        return 
+
+      }
+      if (this.jobId && this.phone) {
         login.login({
           code: this.code,
-          jobNumber: this.jobNumber,
-          iphone: this.iphone
+          jobId: this.jobId,
+          phone: this.phone
         }).then(data => {
-          uni.setStorageSync('mini_token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqb2JJZCI6IjEwMDAxIiwibmFtZSI6IueOi-S6lCIsInBob25lIjoiMTg4ODg4ODg4ODgiLCJjb21wYW55SWQiOiI4NiIsInJvbGUiOjMsImJlbG9uZ0NvbXBhbnkiOjEsImlhdCI6MTY0MTcxNDQ2NCwiZXhwIjoxNjQyMzE5MjY0fQ.8ogT_LXpkmk5rCZ9DKrGTXQJmI-ZHHrgQjHDfJk14D0');
+          uni.setStorageSync('mini_token', data.token);
           this.setUserLogin(true)
         })
       } else {
         wx.showToast({
-          title: '请填写以上全部的信息',
+          title: '请输入工号和手机号',
           icon: 'none',
           duration: 1500
         })
       }
     },
     getCode() {
-      this.beginCountDown = true
-      this.timer = setInterval(() => {
-        if (!this.timeNum) {
-          this.beginCountDown = false
-          this.timeNum = 60
-          clearInterval(this.timer)
-        }
-        this.timeNum--
-      }, 1000)
+      login.sendSms({
+        jobId: this.jobId,
+        phone: this.phone
+      }).then(() => {
+        this.beginCountDown = true
+        wx.showToast({
+          title: '获取验证码成功',
+          icon: 'none',
+          duration: 1500
+        })
+      })
     }
   }
 }

@@ -1,37 +1,5 @@
 <template>
   <view class="box">
-    <div class="head">
-      <p @click="clickChoseTime">
-        {{ timeChooseMap[currentChooseTime] }}
-        <span
-          class="icon icon-down-arrows"
-        />
-      </p>
-      <ul v-if="timeChooseShow">
-        <li
-          v-for="(item, index) in timeChooseMap"
-          :key="index"
-          @click="chooseFilterTime(index)"
-        >
-          {{ item }}
-        </li>
-      </ul>
-    </div>
-    <div class="date">
-      <div class="choose-date">
-        <p>
-          <span
-            :class="{active: currentSpell === 7}"
-            @click="chooseSpell(7)"
-          >7天</span>
-          <span
-            :class="{active: currentSpell === 30}"
-            @click="chooseSpell(30)"
-          >30天</span>
-        </p>
-      </div>
-      <span>数据更新至：<br>12-06</span>
-    </div>
     <div class="lists">
       <mescroll-body
         ref="mescrollRef"
@@ -45,32 +13,7 @@
           class="card"
           @click="goUserInfoPage(item)"
         >
-          <div class="top">
-            <img
-              :src="item.img"
-              alt=""
-            >
-            <div class="user">
-              <p class="name">
-                {{ item.name }}
-              </p>
-              <p class="tag">
-                {{ item.tag }}
-              </p>
-              <p class="data">
-                <span class="recommend">推荐度{{ parseInt(item.recommend) }}%</span>
-                <span>活跃度{{ parseInt(item.active) }}%</span>
-                <span>影响人数{{ parseInt(item.affect) }}</span>
-              </p>
-            </div>
-            <img 
-              class="phone"
-              @click.stop="callPhone(item)"
-              src="../../static/img/phone.png">
-          </div>
-          <p class="bottom">
-            <span>{{ item.time }}小时前</span>访问了 {{ item.histroy.join(' ') }}
-          </p>
+          <wxUser :item="item"></wxUser>
         </div>
       </mescroll-body>
     </div>
@@ -80,10 +23,18 @@
 <script>
 import MescrollMixin from '@/uni_modules/mescroll-uni/components/mescroll-uni/mescroll-mixins.js'
 import mescrollBody from '@/uni_modules/mescroll-uni/components/mescroll-body/mescroll-body'
+import wxUser from '../../components/wxUserItem/index'
 import { getUser } from '@/api'
+
+const getUserListFunMap = {
+  0: getUser.recommend,
+  1: getUser.regular,
+  2: getUser.share
+}
 export default {
   components: {
-    mescrollBody
+    mescrollBody,
+    wxUser
   },
   onShow() {
     const pagearr = getCurrentPages()// 获取应用页面栈
@@ -126,9 +77,13 @@ export default {
     }
   },
   methods: {
+    getHour(time) {
+      const spaceTime = new Date().getTime() - new Date(time).getTime()
+      return Math.floor( spaceTime / 1000 / 60 / 60)
+    },
     goUserInfoPage(item) {
       uni.navigateTo({
-        url: `/pages/user/info?id=${item.id}`
+        url: `/pages/user/info?id=${item.openId}`
       })
     },
     filterUserList() {
@@ -160,20 +115,19 @@ export default {
     getUserList() {
       if (this.isLoading || this.userList.length === this.listCount) return
       this.isLoading = true
-      getUser.list({
-        pagesize: this.pagesize,
-        offset: this.offset,
-        type: this.pageType,
-        spell: this.currentSpell
+      getUserListFunMap[this.pageType]({
+        count: this.pagesize,
+        limit: this.pagesize,
+        offset: this.offset
       }).then(data => {
-        if (data.list) {
+        if (data.users) {
           if (this.offset) {
-            this.userList = this.userList.concat(data.list)
+            this.userList = this.userList.concat(data.users)
           } else {
-            this.userList = data.list
+            this.userList = data.users
           }
-          this.filterUserList()
-          this.listCount = data.count
+          // this.filterUserList()
+          this.listCount = data.total
           this.offset += this.pagesize
           this.isLoading = false
           this.mescroll.endSuccess(this.userList.length, this.userList.length !== this.listCount) // 必传参数(当前页的数据个数, 是否有下一页true/false)
@@ -265,70 +219,5 @@ export default {
 .lists {
   padding: 20rpx 10rpx 0;
   background-color: #fff;
-  .card {
-    padding: 24rpx 20rpx;
-    border-radius:20rpx;
-    margin-bottom: 20rpx;
-    background-color: #f7f9fd;
-    .top {
-      padding: 20rpx 0;
-      display: flex;
-      img {
-        width: 108rpx;
-        height: 108rpx;
-        border-radius: 50%;
-      }
-      .user {
-        flex: 1;
-        margin-left: 20rpx;
-        p {
-          margin: 0;
-          padding: 0;
-        }
-        .name {
-          display: inline-block;
-          font-size: 30rpx;
-          color: #494949;
-          line-height: 40rpx;
-        }
-        .tag {
-          margin-left: 18rpx;
-          vertical-align: middle;
-          display: inline-block;
-          padding: 0rpx 22rpx;
-          font-size: 20rpx;
-          color: #fff;
-          border-radius: 20rpx;
-          line-height: 34rpx;
-          background-color: #76ce96;
-        }
-        .data {
-          margin-top: 17rpx;
-          font-size: 20rpx;
-          line-height: 30rpx;
-          color: #969696;
-          span {
-            margin-right: 30rpx;
-          }
-          .recommend {
-            color: #606060;
-          }
-        }
-      }
-      .phone {
-        width: 80rpx;
-        height: 80rpx;
-        vertical-align: middle;
-      }
-    }
-    .bottom {
-      font-size: 18rpx;
-      padding: 18rpx 0;
-      span {
-        color: #969696;
-        margin-right: 16rpx;
-      }
-    }
-  }
 }
 </style>

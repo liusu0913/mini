@@ -3,14 +3,14 @@ import http from '@/libs/request'
 export default {
   getRank() {
     return http.request({
-      url: '/get/ranking',
-      method: 'get'
+      url: '/mini/visitor/rank',
+      method: 'post'
     })
   },
   getNewAdd() {
     return http.request({
-      url: '/get/newAdd',
-      method: 'get'
+      url: '/mini/visitor/visitor',
+      method: 'post'
     })
   },
   readSopTips(data) {
@@ -25,12 +25,5 @@ export default {
       url: '/mini/activeRemind/getMsgCount',
       method: 'post'
     })
-  },
-  getFriendTips() {
-    return http.request({
-      url: '/friend/tips',
-      method: 'get'
-    })
   }
-
 }

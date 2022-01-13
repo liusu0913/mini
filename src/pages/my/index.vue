@@ -33,8 +33,8 @@
         >
           <div class="search">
             <div class="input">
-              <span
-                class="icon icon-search"
+              <img
+                src="../../static/img/search.png"
                 @click="beginSearch"
               />
               <input
@@ -73,32 +73,7 @@
               class="card"
               @click="goUserInfoPage(item)"
             >
-              <div class="top">
-                <img
-                  :src="item.img"
-                  alt=""
-                >
-                <div class="user">
-                  <p class="name">
-                    {{ item.name }}
-                  </p>
-                  <p class="tag">
-                    {{ item.tag }}
-                  </p>
-                  <p class="data">
-                    <span class="recommend">推荐度{{ parseInt(item.recommend) }}%</span>
-                    <span>活跃度{{ parseInt(item.active) }}%</span>
-                    <span>影响人数{{ parseInt(item.affect) }}</span>
-                  </p>
-                </div>
-                <img 
-                  class="phone"
-                  @click.stop="callPhone(item)"
-                  src="../../static/img/phone.png">
-              </div>
-              <p class="bottom">
-                <span>{{ item.time }}小时前</span>访问了 {{ item.histroy.join(' ') }}
-              </p>
+              <wxUser :item="item"></wxUser>
             </div>
           </mescroll-body>
         </view>
@@ -111,16 +86,19 @@
 import eTab from '../../components/tab/index'
 import MescrollMixin from '@/uni_modules/mescroll-uni/components/mescroll-uni/mescroll-mixins.js'
 import mescrollBody from '@/uni_modules/mescroll-uni/components/mescroll-body/mescroll-body'
+import wxUser from '../../components/wxUserItem/index'
 import { getUser } from '@/api'
 
 export default {
   components: {
     eTab,
-    mescrollBody
+    mescrollBody,
+    wxUser
   },
   mixins: [MescrollMixin],
   data() {
     return {
+      isSearch: false,
       userList: [],
       listCount: 20,
       pagesize: 20,
@@ -145,11 +123,18 @@ export default {
     },
     filterRules() {
       if (!this.filterRules) {
-        this.beginSearch()
+        this.isSearch = false
+        this.offset = 0
+        this.userList = []
+        this.getUserList()
       }
     }
   },
   methods: {
+    getHour(time) {
+      const spaceTime = new Date().getTime() - new Date(time).getTime()
+      return Math.floor( spaceTime / 1000 / 60 / 60)
+    },
     callPhone(item) {
       uni.makePhoneCall({
         phoneNumber: `${item.phone}` // 仅为示例
@@ -157,7 +142,7 @@ export default {
     },
     goUserInfoPage(item) {
       uni.navigateTo({
-        url: `/pages/user/info?id=${item.id}`
+        url: `/pages/user/info?id=${item.openId}`
       })
     },
     filterUserList() {
@@ -175,10 +160,10 @@ export default {
       if (this.isLoading || this.userList.length === this.listCount) return
       this.isLoading = true
       const sendData = {
-        pagesize: this.pagesize,
+        count: this.pagesize,
         offset: this.offset
       }
-      if (this.filterRules) {
+      if (this.isSearch) {
         sendData.search = this.filterRules
       }
       getUser.list(sendData).then(data => {
@@ -212,9 +197,13 @@ export default {
       })
     },
     beginSearch() {
-      this.offset = 0
-      this.userList = []
-      this.getUserList()
+      if (this.filterRules) {
+        this.isSearch = true
+        this.offset = 0
+        this.userList = []
+        this.getUserList()
+      }
+      
     }
   }
 }
@@ -333,14 +322,13 @@ export default {
   .input {
     flex: 1;
     position: relative;
-    .icon {
+    img {
       position: absolute;
-      top: 0;
+      top: 50%;
       left: 20rpx;
-      font-size: 50rpx;
-      font-weight: bold;
-      line-height: 94rpx;
-      color: #6ec995;
+      margin-top: -22rpx;
+      width: 44rpx;
+      height: 44rpx;
     }
     input {
       height: 94rpx;
@@ -378,7 +366,7 @@ export default {
     }
     .user {
       flex: 1;
-      margin-left: 20rpx;
+      margin-left: 40rpx;
       p {
         margin: 0;
         padding: 0;
@@ -387,7 +375,8 @@ export default {
         display: inline-block;
         font-size: 30rpx;
         color: #494949;
-        line-height: 40rpx;
+        line-height: 108rpx;
+        font-weight: bold;
       }
       .tag {
         margin-left: 18rpx;
