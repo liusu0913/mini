@@ -1,5 +1,4 @@
 import http from '@/libs/request'
-import { update } from 'lodash'
 
 export default {
   info() {
@@ -8,11 +7,13 @@ export default {
       method: 'post'
     })
   },
-  update(data) {
+  update(data, ...res) {
+    console.log(...res)
     return http.request({
       url: '/mini/user/update',
       method: 'post',
-      data
+      data,
+      ...res
     })
   }
 }

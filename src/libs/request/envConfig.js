@@ -1,8 +1,9 @@
 const defaultEnv = 'development'
 const envUrlMap = {
   mock: {
-    url: 'http://localhost:3000',
+    url: 'http://localhost:3000/api',
     apis: [
+      '/mini/common/getUnionid',
       '/mini/wxuser/list',
       '/mini/activeUsers/recommend',
       '/mini/activeUsers/regular',

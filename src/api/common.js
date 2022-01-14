@@ -14,5 +14,13 @@ export default {
       method: 'post',
       data
     })
+  },
+  getUnionid(data) {
+    return http.request({
+      url: '/mini/common/getUnionid',
+      method: 'post',
+      data
+    })
   }
+  
 }

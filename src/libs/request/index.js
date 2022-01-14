@@ -25,7 +25,7 @@ const http = new Request()
 // 请求拦截
 http.interceptors.request.use(
   (config) => {
-    const {header} = config
+    const { header } = config
     config.header = {
       ...header,
       'Authorization': `Bearer ${uni.getStorageSync('mini_token')}`

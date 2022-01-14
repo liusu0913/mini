@@ -37,9 +37,9 @@
           </span>
         </div>
       </div>
-      
     </div>
     <button
+      open-type="getUserInfo"
       class="login-btn"
       type="primary"
       @click="userLogin"
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { login } from '@/api'
+import { login, common, user } from '@/api'
 import { mapMutations } from 'vuex'
 export default {
   name: 'Index',
@@ -67,6 +67,16 @@ export default {
     }
   },
   methods: {
+    getUserInfo(cb) {
+      uni.login({
+        lang: 'zh_CN',
+        success(data) {
+          common.getUnionid(data).then(res => {
+            cb && cb(res)
+          })
+        }
+      })
+    },
     ...mapMutations({
       setUserLogin: 'user/setUserLogin'
     }),
@@ -87,7 +97,30 @@ export default {
           phone: this.phone
         }).then(data => {
           uni.setStorageSync('mini_token', data.token);
-          this.setUserLogin(true)
+          this.getUserInfo((info) => {
+            if (info.openid) {
+              user.update({
+                  openId: info.openid,
+                  unionid: info.unionid,
+                }).then(res => {
+                  if (res.count) {
+                    this.setUserLogin(true)
+                  } else {
+                    uni.removeStorageSync('mini_token');
+                    wx.showToast({
+                      icon: 'none',
+                      title: '更新用户信息失败，请重新登录'
+                    })
+                  }
+              })
+            } else {
+              uni.removeStorageSync('mini_token');
+              wx.showToast({
+                icon: 'none',
+                title: '获取用户openId失败，请重新登录'
+              })
+            }
+          })
         })
       } else {
         wx.showToast({
