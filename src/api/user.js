@@ -7,13 +7,11 @@ export default {
       method: 'post'
     })
   },
-  update(data, ...res) {
-    console.log(...res)
+  update(data) {
     return http.request({
       url: '/mini/user/update',
       method: 'post',
       data,
-      ...res
     })
   }
 }

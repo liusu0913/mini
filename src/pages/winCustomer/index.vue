@@ -114,18 +114,8 @@ export default {
     mescrollBody
   },
   mixins: [MescrollMixin],
-  onShow() {
-    
-  },
-  computed: {
-    currentTabId() {
-      const pagearr = getCurrentPages()
-      const currentPage = pagearr[pagearr.length - 1]
-      if (currentPage.options) {
-        return Number(currentPage.options.tab)
-      }
-      return 1
-    }
+  onLoad(options) {
+    this.currentTabId = Number(options.tab)
   },
   data() {
     return {
@@ -146,7 +136,7 @@ export default {
       isSearch: false,
       filterRules: '',
       currentChooseTime: 1,
-      // currentTabId: 1,
+      currentTabId: 0,
       currentTagId: 0,
       isFilterCollect: false,
       activeList: [],

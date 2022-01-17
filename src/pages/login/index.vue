@@ -56,8 +56,8 @@ export default {
   name: 'Index',
   data () {
     return {
-      jobId: '10001',
-      phone: '15811240124',
+      jobId: '',
+      phone: '',
       code: '',
       codeBtnTxt: '获取验证码',
       timeNum: 60,
@@ -98,20 +98,19 @@ export default {
         }).then(data => {
           uni.setStorageSync('mini_token', data.token);
           this.getUserInfo((info) => {
-            if (info.openid) {
+            if (info.unionid) {
               user.update({
-                  openId: info.openid,
-                  unionid: info.unionid,
-                }).then(res => {
-                  if (res.count) {
-                    this.setUserLogin(true)
-                  } else {
-                    uni.removeStorageSync('mini_token');
-                    wx.showToast({
-                      icon: 'none',
-                      title: '更新用户信息失败，请重新登录'
-                    })
-                  }
+                unionid: info.unionid,
+              }).then(res => {
+                if (res.count) {
+                  this.setUserLogin(true)
+                } else {
+                  uni.removeStorageSync('mini_token');
+                  wx.showToast({
+                    icon: 'none',
+                    title: '更新用户信息失败，请重新登录'
+                  })
+                }
               })
             } else {
               uni.removeStorageSync('mini_token');
@@ -131,6 +130,15 @@ export default {
       }
     },
     getCode() {
+      this.timer = setInterval(() => {
+        if (this.timeNum) {
+          this.timeNum --
+        } else {
+          clearInterval(this.timer)
+          this.beginCountDown = false
+          this.timeNum = 60
+        }
+      }, 1000)
       login.sendSms({
         jobId: this.jobId,
         phone: this.phone
