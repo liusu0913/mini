@@ -20,7 +20,7 @@ export default {
   mutations: {
     setUserInfo(state, info) {
       if (!info.avatar) {
-        info.avatar = 'https://rocket-dev.woa.com/images/rocket.png'
+        info.avatar = "https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/avator.png"
       }
       if (info.name) {
         state.info = info

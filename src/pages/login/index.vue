@@ -97,29 +97,7 @@ export default {
           phone: this.phone
         }).then(data => {
           uni.setStorageSync('mini_token', data.token);
-          this.getUserInfo((info) => {
-            if (info.unionid) {
-              user.update({
-                unionid: info.unionid,
-              }).then(res => {
-                if (res.count) {
-                  this.setUserLogin(true)
-                } else {
-                  uni.removeStorageSync('mini_token');
-                  wx.showToast({
-                    icon: 'none',
-                    title: '更新用户信息失败，请重新登录'
-                  })
-                }
-              })
-            } else {
-              uni.removeStorageSync('mini_token');
-              wx.showToast({
-                icon: 'none',
-                title: '获取用户openId失败，请重新登录'
-              })
-            }
-          })
+          this.setUserLogin(true)
         })
       } else {
         wx.showToast({
@@ -130,15 +108,6 @@ export default {
       }
     },
     getCode() {
-      this.timer = setInterval(() => {
-        if (this.timeNum) {
-          this.timeNum --
-        } else {
-          clearInterval(this.timer)
-          this.beginCountDown = false
-          this.timeNum = 60
-        }
-      }, 1000)
       login.sendSms({
         jobId: this.jobId,
         phone: this.phone
@@ -149,6 +118,15 @@ export default {
           icon: 'none',
           duration: 1500
         })
+        this.timer = setInterval(() => {
+          if (this.timeNum) {
+            this.timeNum --
+          } else {
+            clearInterval(this.timer)
+            this.beginCountDown = false
+            this.timeNum = 60
+          }
+        }, 1000)
       })
     }
   }

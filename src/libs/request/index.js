@@ -75,6 +75,9 @@ http.interceptors.response.use(
       case 0:
         // [ 示例 ] code === 0 代表没有错误
         return dataAxios.data
+      case 100002:
+        uni.setStorageSync('mini_token', '')
+        break
       case 'xxx':
         // [ 示例 ] 其它和后台约定的 code
         errorCreate(

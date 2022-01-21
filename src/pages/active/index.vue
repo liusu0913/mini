@@ -119,6 +119,9 @@ export default {
     }
   },
   onShow() {
+    this.initPage(this.changeCardRendaer())
+  },
+  mounted() {
     const that = this
     const pagearr = getCurrentPages()// 获取应用页面栈
     const currentPage = pagearr[pagearr.length - 1]// 获取当前页面信息

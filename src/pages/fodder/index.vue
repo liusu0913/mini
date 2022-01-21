@@ -14,9 +14,9 @@
           <div class="txt">
             {{ currentFodder.content }}
           </div>
-          <div class="source">
+          <!-- <div class="source">
             他人引荐
-          </div>
+          </div> -->
         </div>
         <div class="foot">
           <button
@@ -141,16 +141,23 @@ export default {
     },
     saveText() {
       const that = this
-      wx.setClipboardData({
-        data: this.currentFodder.text,
+      uni.setClipboardData({
+        data: this.currentFodder.content,
         success (res) {
           wx.getClipboardData({
             success (res) {
               wx.showToast({
-                title: '复制成功'
+                title: '复制成功',
+                icon: 'none'
               })
               that.dialogIsShow = false
             }
+          })
+        },
+        complete(res) {
+          wx.showToast({
+            title: res.errMsg,
+            icon: 'none'
           })
         }
       })
