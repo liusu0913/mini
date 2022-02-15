@@ -1,8 +1,7 @@
 <template>
+
   <div>
-    <LoginPage v-if="!isLogin" />
     <div
-      v-else
       class="index-box"
     >
       <header class="header">
@@ -75,7 +74,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import LoginPage from '../login/index'
 import { home as homeApi, getTags, user } from '@/api'
 import { mapMutations } from 'vuex'
 
@@ -87,9 +85,6 @@ navIconMap.set('中青年', 'https://baike-med-1256891581.file.myqcloud.com/mini
 navIconMap.set('老年', 'https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/nav-4.png')
 export default {
   name: 'Index',
-  components: {
-    LoginPage
-  },
   data () {
     return {
       navList: [],
@@ -108,7 +103,8 @@ export default {
           all: 0,
           unread: 0
         }
-      }
+      },
+      openId: ''
     }
   },
   computed: {
@@ -123,11 +119,17 @@ export default {
     }
   },
   onShow () {
+    if (!this.isLogin) {
+      uni.navigateTo({
+        url: '/pages/login/index'
+      })
+    }
     this.initTabBar()
   },
   methods: {
     ...mapMutations({
-      setUserInfo: 'user/setUserInfo'
+      setUserInfo: 'user/setUserInfo',
+      setUserLogin: 'user/setUserLogin'
     }),
     goSendMorePage(type) {
       homeApi.readSopTips({
@@ -161,6 +163,11 @@ export default {
     initHomeData() {
       user.info().then((data) => {
         this.setUserInfo(data)
+        if (!data.openId) {
+          uni.navigateTo({
+            url: '/pages/auto/index'
+          })
+        }
       })
       // 初始化导航
       getTags.list({

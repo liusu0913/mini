@@ -1,6 +1,13 @@
 import http from '@/libs/request'
 
 export default {
+  sendMsg(data) {
+    return http.request({
+      url: '/admin/msg/sendMsg',
+      method: 'post',
+      data
+    })
+  },
   getActiveList(data) {
     return http.request({
       url: '/mini/active/list',

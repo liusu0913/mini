@@ -75,6 +75,12 @@ http.interceptors.response.use(
       case 0:
         // [ 示例 ] code === 0 代表没有错误
         return dataAxios.data
+      case 43004:
+        uni.showToast({
+          title: '请关注公众号',
+          icon: 'none'
+        })
+        break
       case 'xxx':
         // [ 示例 ] 其它和后台约定的 code
         errorCreate(
@@ -83,21 +89,16 @@ http.interceptors.response.use(
         break
       default:
         if (code) {
-          if ([2001, 2002].includes(code)) {
-            errorCreate(
-              `[ code: ${code} ] ${message}: ${response.config.url}`
-            )
-            // location.href = '/account/login'
-          } else {
+          if ([100002, 10004].includes(code)) {
             uni.showToast({
-              title: message,
+              title: '登录状态失效，请重新登陆',
               icon: 'none'
             })
-            // 不是正确的 code
-            errorCreate(
-              `[ code: ${code} ] ${message}: ${response.config.url}`
-            )
-          }
+            uni.removeStorageSync('mini_token');
+            uni.navigateTo({
+              url: '/pages/login/index'
+            })
+          } 
         } else {
           errorCreate(`${message}: ${response.config.url}`)
         }

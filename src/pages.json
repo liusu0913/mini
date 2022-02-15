@@ -18,6 +18,18 @@
 			"style": {
 				"navigationBarTitleText": "个人中心"
 			}
+		},
+		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationBarTitleText": "用户登录"
+			}
+		},
+		{
+			"path": "pages/auto/index",
+			"style": {
+				"navigationBarTitleText": "授权中心"
+			}
 		}
 	],
 	"subPackages": [{
@@ -84,7 +96,7 @@
 	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "医药线小程序",
+		"navigationBarTitleText": "麦凯盈",
 		"navigationBarBackgroundColor": "#54bf8b",
 		"backgroundColor": "#54bf8b"
 	},

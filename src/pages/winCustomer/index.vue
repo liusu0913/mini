@@ -1,5 +1,13 @@
 <template>
-  <div class="customer-box">
+  <div :class="{
+    'customer-box': true,
+    'no-scroll': mpShow
+  }">
+    <div class="mp-mask" v-if="mpShow">
+      <img class="mp-close" @click="closeMpDialog" src="../../static/img/close.png" alt="">
+      <p>长按保存公众号二维码</p>
+      <img class="mp-img" src="../../static/img/mp.jpg" alt="">
+    </div>
     <div class="board">
       <p class="title">
         数据概览
@@ -77,7 +85,7 @@
                 {{ item.title }}
               </p>
               <p class="time">
-                {{ item.time }}
+                {{ item.startTime | date_format }}
               </p>
               <p class="share">
                 <span>{{ parseInt(item.share) || 0 }}人分享</span>
@@ -91,7 +99,11 @@
                 >{{ tag.name }}</span>
               </p>
             </div>
-            <p v-if="item.diffuseTypeId !== 1" class="share-icon" @click.stop="sharePeople">
+            <p
+              v-if="item.diffuseTypeId !== 1"
+              class="share-icon"
+              @click="sharePeople(item)"
+            >
               <img src="../../static/img/share.png" alt="">
               <span>分享</span>
             </p>
@@ -107,6 +119,8 @@ import MescrollMixin from '@/uni_modules/mescroll-uni/components/mescroll-uni/me
 import mescrollBody from '@/uni_modules/mescroll-uni/components/mescroll-body/mescroll-body'
 import multTabs from '../../components/multTabs/index'
 import { getClient } from '@/api'
+import {mapGetters} from 'vuex'
+
 
 export default {
   components: {
@@ -119,6 +133,7 @@ export default {
   },
   data() {
     return {
+      mpShow: false,
       activeData: {
         pv: 0,
         share: 0,
@@ -164,21 +179,50 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters({
+      info: 'user/info',
+    })
+  },
   mounted() {
     this.initPage()
   },
   methods: {
+    closeMpDialog() {
+      this.mpShow = false
+    },
     renderList(tagId) {
       this.currentTagId = tagId
       this.offset = 0
       this.activeList = []
       this.getActiveList()
     },
-    sharePeople() {
-      uni.showToast({
-        title: '吊起后端服务，发送公众号通知',
-        icon: 'none'
+    sharePeople(item) {
+      const that = this
+
+      const sendData = {
+        title: item.type ? `这是您的${item.type.title}，请查收`: '这是您的营销内容，请查收',
+        keyword1: item.title,
+        remark: item.endTime 
+          ? `任务时间：${this.$options.filters.date_format(item.startTime)}至${this.$options.filters.date_format(item.endTime)}` 
+          : `任务开始时间：${this.$options.filters.date_format(item.startTime)}}`
+
+      }
+      getClient.sendMsg({
+        openID: that.info.openId,
+        url: `${item.url}?jobId=${that.info.jobId}&belongCompnay=${that.info.belongCompany}&activeId=${item.activeId}`,
+        ...sendData
+      }).then((data) => {
+        if (!data) {
+          that.mpShow = true
+        } else {
+          uni.showToast({
+            title: '发送消息成功，请查看微信消息',
+            icon: 'none'
+          })
+        }
       })
+      
     },
     goActivePage(active) {
       if (active.diffuseTypeId === 1) {
@@ -198,21 +242,6 @@ export default {
       }).then(res => {
         _.activeData = res
       })
-    },
-    changeOneTag(tag) {
-      this.currentOneTag = tag.id
-      this.offset = 0
-      this.activeList = []
-      this.getActiveList()
-    },
-    changeTwoTag(tag) {
-      this.currentTwoTag = tag.id
-      this.offset = 0
-      this.activeList = []
-      this.getActiveList()
-    },
-    chanegTab(index) {
-      
     },
     changeTime(item) {
       this.currentChooseTime = item.key
@@ -259,7 +288,11 @@ export default {
 </script>
 
 <style lang="scss">
+.no-scroll {
+  overflow: hidden;
+}
 .customer-box {
+  position: relative;
   box-sizing: border-box;
   height: 100vh;
   background: url('https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/bg.png') no-repeat;
@@ -268,6 +301,39 @@ export default {
   background-position-y: -132px;
   background-color: #fff;
 }
+
+.mp-mask {
+  z-index: 9999;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, .8);
+  .mp-close {
+    position: absolute;
+    width: 40rpx;
+    height: 40rpx;
+    top: 40rpx;
+    right: 40rpx;
+  }
+  p {
+    margin-top: 30%;
+    text-align: center;
+    font-size: 26rpx;
+    color: #fff;
+  }
+  .mp-img {
+    position: absolute;
+    width: 400rpx;
+    height: 400rpx;
+    top: 50%;
+    left: 50%;
+    margin-top: -200rpx;
+    margin-left: -200rpx;
+  }
+}
+
 .items {
   background-color: #fff;
   border-radius: 10rpx;

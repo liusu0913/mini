@@ -104,6 +104,9 @@ export default {
               }).then(res => {
                 if (res.count) {
                   this.setUserLogin(true)
+                  uni.switchTab({
+                    url: '/pages/index/index'
+                  })
                 } else {
                   uni.removeStorageSync('mini_token');
                   wx.showToast({
