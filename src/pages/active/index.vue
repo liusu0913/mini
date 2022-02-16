@@ -299,7 +299,7 @@ export default {
         bgConfig,
         qrCodeArray: () => {
           return [{
-            text: 'https://www.ihaola.com.cn/partners/haola-2ca4db68-192a-f911-501a-f155af6f5772/face-tooth/index.html',
+            text: `${that.active.url}?activeId=${that.active.activeId}&jobId=${that.info.jobId}&belongCompany=${that.info.belongCompany}`,
             size: uni.upx2px(150),
             backgroung: '#fff',
             dx: uni.upx2px(510),
