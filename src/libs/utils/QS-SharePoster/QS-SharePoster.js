@@ -32,10 +32,10 @@ function getSharePoster(obj) {
     _this,
     delayTimeScale,
     drawDelayTime,
-    draw
+    draw,
+    cb = () => {console.log('draw end')}
   } = obj
   return new Promise(async (rs, rj) => {
-    console.log(bgConfig, 111111)
     try {
       _app.showLoading('正在准备海报数据')
       if (!Context) {
@@ -237,6 +237,7 @@ function getSharePoster(obj) {
         })
       }
       const poster = await drawShareImage({
+        cb,
         bgConfig,
         Context,
         type,
@@ -271,6 +272,7 @@ function getSharePoster(obj) {
 
 function drawShareImage(obj) { // 绘制海报方法
   let {
+    cb,
     bgConfig,
     Context,
     type,
@@ -472,6 +474,7 @@ function drawShareImage(obj) { // 绘制海报方法
         }
         _app.log(`延时系数:${delayTimeScale}`)
         _app.log(`总计延时:${delayTime}`)
+        cb && cb()
         setTimeout(canvasToTempFilePathFn, delayTime)
       }
 

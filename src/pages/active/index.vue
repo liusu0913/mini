@@ -131,6 +131,7 @@ export default {
       query.select('.content').boundingClientRect(function (rect) {
         that.$set(that.bgConfig, 'height', rect.height - uni.upx2px(220))
         that.$set(that.bgConfig, 'all', rect.height - uni.upx2px(20))
+        that.initPage(that.changeCardRendaer())
       }).exec()
     })
     
@@ -286,14 +287,21 @@ export default {
         }
         renderData.push(cardMap[item](index))
       })
-
       return renderData
     },
     initPage(cardData) {
+      uni.showToast({
+        title: '海报绘制中',
+        icon: 'loading',
+        duration: 10000
+      });
       const that = this
       const { bgConfig } = that
       getSharePoster({
         that,
+        cb: () => {
+          uni.hideToast()
+        },
         posterCanvasId: 'canvasId', // canvasId
         backgroundImage: that.active.img, // 背景图片路径, 画布会跟随图片的实际像素, 并绘制为背景, 请不要使背景图片的像素太大
         bgConfig,

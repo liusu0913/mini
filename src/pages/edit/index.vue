@@ -45,8 +45,8 @@ import {
 export default {
   data() {
     return {
-      bucket: 'img-1303063528',
-      region: 'ap-shanghai',
+      bucket: 'img-1307195053',
+      region: 'ap-nanjing',
       userInfo: {
       },
       items: [{
