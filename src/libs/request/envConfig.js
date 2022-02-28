@@ -5,7 +5,7 @@ const envUrlMap = {
     apis: []
   },
   development: {
-    url: 'http://119.28.163.231:3000/api',
+    url: 'https://marketing-tech.cn/api',
     apis: []
   },
   production: {

@@ -91,6 +91,10 @@ export default {
 
       }
       if (this.jobId && this.phone) {
+        uni.showToast({
+          icon: 'loading',
+          title: '正在登录中'
+        })
         login.login({
           code: this.code,
           jobId: this.jobId,
@@ -104,6 +108,7 @@ export default {
               }).then(res => {
                 if (res.count) {
                   this.setUserLogin(true)
+                  uni.hideToast()
                   uni.switchTab({
                     url: '/pages/index/index'
                   })

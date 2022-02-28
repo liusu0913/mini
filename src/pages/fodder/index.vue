@@ -142,7 +142,7 @@ export default {
     saveText() {
       const that = this
       wx.setClipboardData({
-        data: this.currentFodder.text,
+        data: that.currentFodder.content,
         success (res) {
           wx.getClipboardData({
             success (res) {
@@ -172,7 +172,6 @@ export default {
       }
     },
     getFodderList() {
-      console.log(this.fodderList.length === this.listCount , this.isLoading ,(this.currentTagId === 0 ))
       if (this.fodderList.length === this.listCount || this.isLoading ||(this.currentTagId === 0 )) return
       this.isLoading = true
       const sendData = {
