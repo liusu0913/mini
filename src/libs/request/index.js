@@ -75,17 +75,13 @@ http.interceptors.response.use(
       case 0:
         // [ 示例 ] code === 0 代表没有错误
         return dataAxios.data
+      case 1002:
+        return dataAxios
       case 43004:
         uni.showToast({
           title: '请关注公众号',
           icon: 'none'
         })
-        break
-      case 'xxx':
-        // [ 示例 ] 其它和后台约定的 code
-        errorCreate(
-          `[ code: xxx ] ${dataAxios.msg}: ${response.config.url}`
-        )
         break
       default:
         if (code) {
@@ -100,6 +96,7 @@ http.interceptors.response.use(
             })
           } 
         } else {
+          
           errorCreate(`${message}: ${response.config.url}`)
         }
         break

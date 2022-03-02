@@ -137,27 +137,35 @@ export default {
         })
       }
     },
-    getCode() {
-      this.timer = setInterval(() => {
-        if (this.timeNum) {
-          this.timeNum --
-        } else {
-          clearInterval(this.timer)
-          this.beginCountDown = false
-          this.timeNum = 60
-        }
-      }, 1000)
-      login.sendSms({
+    async getCode() {
+      let res = await login.sendSms({
         jobId: this.jobId,
         phone: this.phone
-      }).then(() => {
+      })
+      
+      if (res.code === 0) {
         this.beginCountDown = true
         wx.showToast({
           title: '获取验证码成功',
           icon: 'none',
           duration: 1500
         })
-      })
+          this.timer = setInterval(() => {
+          if (this.timeNum) {
+            this.timeNum --
+          } else {
+            clearInterval(this.timer)
+            this.beginCountDown = false
+            this.timeNum = 60
+          }
+        }, 1000)
+      } else {
+        wx.showToast({
+          title: '请输入正确手机号和工号',
+          icon: 'none',
+          duration: 1500
+        })
+      }
     }
   }
 }
