@@ -20,7 +20,7 @@
         src="../../static/img/phone.png">
     </div>
       <p class="bottom" v-if="item.record && item.record.length">
-      <span>{{ getHour(item.record[0].updatedAt) }}小时前</span>访问了 {{ item.record[0].active.title }}
+      <span>{{ getHour(item.record[0].updatedAt) ? `${getHour(item.record[0].updatedAt)}小时前` : '1小时内'  }}</span>访问了 {{ item.record[0].active.title }}
     </p>
   </div>
 </template>
@@ -37,11 +37,16 @@
     methods: {
       getHour(time) {
         const spaceTime = new Date().getTime() - new Date(time).getTime()
-        return Math.floor( spaceTime / 1000 / 60 / 60)
+        return Math.floor( spaceTime / 1000 / 60 / 60) - 8
       },
       goUserInfoPage(item) {
         uni.navigateTo({
           url: `/pages/user/info?id=${item.openId}`
+        })
+      },
+      callPhone(item) {
+        uni.makePhoneCall({
+          phoneNumber: `${item.phone}` // 仅为示例
         })
       },
     }

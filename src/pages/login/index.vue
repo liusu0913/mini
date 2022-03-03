@@ -142,15 +142,21 @@ export default {
         jobId: this.jobId,
         phone: this.phone
       })
-      
-      if (res.code === 0) {
+
+      if (res && res.code) {
+        wx.showToast({
+          title: res.message,
+          icon: 'none',
+          duration: 1500
+        })
+      } else {
         this.beginCountDown = true
         wx.showToast({
           title: '获取验证码成功',
           icon: 'none',
           duration: 1500
         })
-          this.timer = setInterval(() => {
+        this.timer = setInterval(() => {
           if (this.timeNum) {
             this.timeNum --
           } else {
@@ -159,12 +165,6 @@ export default {
             this.timeNum = 60
           }
         }, 1000)
-      } else {
-        wx.showToast({
-          title: '请输入正确手机号和工号',
-          icon: 'none',
-          duration: 1500
-        })
       }
     }
   }

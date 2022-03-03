@@ -59,11 +59,20 @@
           去除名片
         </p>
         <button
+          v-if="hasAutoSaveImg"
           class="save"
           type="default"
           @click="saveBtn"
         >
           保存
+        </button>
+        <button
+          v-else
+          class="save"
+          type="default"
+          open-type="openSetting"
+        >
+          授权
         </button>
       </view>
     </view>
@@ -79,6 +88,7 @@ import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
+      hasAutoSaveImg: false,
       active: {},
       messageArr: ['头像', '姓名', '职位', '手机号'],
       defaultMessageChose: [0, 1, 2, 3],
@@ -120,6 +130,12 @@ export default {
   },
   onShow() {
     const that = this
+
+    wx.getSetting({
+      success(res) {
+        that.hasAutoSaveImg = res.authSetting['scope.writePhotosAlbum'] === false ? false : true;
+      }
+    })
     const pagearr = getCurrentPages()// 获取应用页面栈
     const currentPage = pagearr[pagearr.length - 1]// 获取当前页面信息
     getClient.getActiveInfo({
@@ -143,6 +159,7 @@ export default {
       })
     },
     saveBtn() {
+      const that = this
       uni.canvasToTempFilePath({
         canvasId: 'canvasId',
         success(res) {
@@ -171,11 +188,10 @@ export default {
                     })
                   },
                   fail() {
-                    // 如果用户拒绝过或没有授权，则再次打开授权窗口
-                    // （ps：微信api又改了现在只能通过button才能打开授权设置，以前通过openSet就可打开，下面有打开授权的button弹窗代码）
                     wx.showToast({
                       title: '请授权才能保存图片到本地'
                     })
+                    that.hasAutoSaveImg = false
                   }
                 })
               } else {

@@ -97,11 +97,6 @@ export default {
         })
       }
     },
-    callPhone(item) {
-      uni.makePhoneCall({
-        phoneNumber: `${item.phone}` // 仅为示例
-      })
-    },
     chooseSpell(num) {
       this.currentSpell = num
     },

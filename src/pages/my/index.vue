@@ -41,6 +41,7 @@
                 v-model="filterRules"
                 confirm-type="search"
                 placeholder="请输入用户名称"
+                @confirm="beginSearch"
               >
             </div>
           </div>
@@ -135,11 +136,6 @@ export default {
       const spaceTime = new Date().getTime() - new Date(time).getTime()
       return Math.floor( spaceTime / 1000 / 60 / 60)
     },
-    callPhone(item) {
-      uni.makePhoneCall({
-        phoneNumber: `${item.phone}` // 仅为示例
-      })
-    },
     goUserInfoPage(item) {
       uni.navigateTo({
         url: `/pages/user/info?id=${item.openId}`
@@ -203,7 +199,6 @@ export default {
         this.userList = []
         this.getUserList()
       }
-      
     }
   }
 }
