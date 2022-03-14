@@ -24,10 +24,10 @@ export default {
         })
         wx.config(data)
         wx.ready(() => {
-          const share_title = 'Rocket-UniApp'
-          const share_desc = 'Rocket-UniApp更懂开发者的多端同构框架，你值得拥有'
+          const share_title = '活动量管理工具'
+          const share_desc = '麦凯盈活动量管理工具小程序'
           const share_link = url
-          const share_img = 'https://eyao.qq.com/node-docs/rocket.png'
+          const share_img = 'https://img-1307195053.cos.ap-nanjing.myqcloud.com/maikaiying.jpg'
           wx.showOptionMenu()
           wx.onMenuShareTimeline({
             title: share_title,

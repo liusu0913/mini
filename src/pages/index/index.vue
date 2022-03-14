@@ -77,12 +77,6 @@ import { mapGetters } from 'vuex'
 import { home as homeApi, getTags, user } from '@/api'
 import { mapMutations } from 'vuex'
 
-const navIconMap = new Map();
-
-navIconMap.set('儿童', 'https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/nav-1.png')
-navIconMap.set('青少年', 'https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/nav-2.png')
-navIconMap.set('中青年', 'https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/nav-3.png')
-navIconMap.set('老年', 'https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/nav-4.png')
 export default {
   name: 'Index',
   data () {
@@ -180,7 +174,7 @@ export default {
           this.navList.push({
             nav: item.name,
             id: item.id,
-            url: navIconMap.get(item.name)
+            url: item.icon
           })
         })
       })

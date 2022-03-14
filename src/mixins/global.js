@@ -8,16 +8,16 @@ export default {
       console.log(target)
     }
     return {
-      title: 'rocket-uniapp',
-      imageUrl: 'https://cloud.qinmudi.cn/uniapp/rocket.png',
+      title: '活动量管理工具',
+      imageUrl: 'https://img-1307195053.cos.ap-nanjing.myqcloud.com/maikaiying.jpg',
       path
     }
   },
   onShareTimeline() {
     const query = getCurrentPageUrl()
     return {
-      title: 'rocket-uniapp',
-      imageUrl: 'https://cloud.qinmudi.cn/uniapp/rocket.png',
+      title: '活动量管理工具',
+      imageUrl: 'https://img-1307195053.cos.ap-nanjing.myqcloud.com/maikaiying.jpg',
       query
     }
   },
