@@ -8,7 +8,7 @@ export default {
       console.log(target)
     }
     return {
-      title: '活动量管理工具',
+      title: '麦凯盈营销云',
       imageUrl: 'https://img-1307195053.cos.ap-nanjing.myqcloud.com/maikaiying.jpg',
       path
     }
@@ -16,7 +16,7 @@ export default {
   onShareTimeline() {
     const query = getCurrentPageUrl()
     return {
-      title: '活动量管理工具',
+      title: '麦凯盈营销云',
       imageUrl: 'https://img-1307195053.cos.ap-nanjing.myqcloud.com/maikaiying.jpg',
       query
     }

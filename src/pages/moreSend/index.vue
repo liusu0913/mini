@@ -8,12 +8,12 @@
     >
       <div
         @click="skipPage(item)"
-        v-for="item in messageList"
-        :key="item.id"
+        v-for="(item, i) in messageList"
+        :key="i"
         class="card"
       >
         <img
-          :src="item.active.img"
+          :src="item.active.banner"
           alt=""
         >
         <div class="bottom">
@@ -52,7 +52,9 @@
 <script>
 import MescrollMixin from '@/uni_modules/mescroll-uni/components/mescroll-uni/mescroll-mixins.js'
 import mescrollBody from '@/uni_modules/mescroll-uni/components/mescroll-body/mescroll-body'
-import { getSendMore } from '@/api'
+import { getSendMore, getClient } from '@/api'
+import {mapGetters} from 'vuex'
+
 export default {
   components: {
     mescrollBody
@@ -70,6 +72,11 @@ export default {
     })
   },
   mixins: [MescrollMixin],
+  computed: {
+    ...mapGetters({
+      info: 'user/info',
+    })
+  },
   data() {
     return {
       pageType: 0,
@@ -114,12 +121,44 @@ export default {
     skipPage(item) {
       const pageMap = {
         0: '/pages/active/index',
-        1: '/pages/fodder/index'
+        1: '/pages/active/index',
+        // 1: '/pages/fodder/index'
+        // 1: '/pages/fodder/index'
       }
-      uni.navigateTo({
-        url: `${pageMap[this.pageType]}?id=${item.id}`
+      if (item.active.diffuseTypeId !== 1) {
+        this.sharePeople(item)
+      } else {
+        uni.navigateTo({
+          url: `${pageMap[this.pageType]}?activeId=${item.active.activeId}`
+        })
+      }
+    },
+    sharePeople(item) {
+      const that = this
+      const sendData = {
+        title: item.type ? `这是您的${item.type.title}，请查收`: '这是您的营销内容，请查收',
+        keyword1: item.title,
+        remark: item.endTime 
+          ? `任务时间：${this.$options.filters.date_format(item.startTime)}至${this.$options.filters.date_format(item.endTime)}` 
+          : `任务开始时间：${this.$options.filters.date_format(item.startTime)}}`
+
+      }
+      getClient.sendMsg({
+        openID: that.info.openId,
+        url: `${item.url}?jobId=${that.info.jobId}&belongCompnay=${that.info.belongCompany}&activeId=${item.activeId}`,
+        ...sendData
+      }).then((data) => {
+        if (!data) {
+          that.mpShow = true
+        } else {
+          uni.showToast({
+            title: '发送消息成功，请查看微信消息',
+            icon: 'none'
+          })
+        }
       })
-    }
+      
+    },
   }
 }
 </script>

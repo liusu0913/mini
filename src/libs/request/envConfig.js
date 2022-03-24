@@ -5,13 +5,13 @@ const envUrlMap = {
     apis: []
   },
   development: {
-    url: 'https://marketing-tech.cn/api',
-    // url: 'http://localhost:3000/api',
+    // url: 'https://marketing-tech.cn/api',
+    url: 'http://localhost:3000/api',
     apis: []
   },
   production: {
-    // url: 'https://marketing-tech.cn/api',
-    url: 'http://localhost:3000/api',
+    url: 'https://marketing-tech.cn/api',
+    // url: 'http://localhost:3000/api',
     apis: []
   }
 }

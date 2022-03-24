@@ -16,6 +16,7 @@
             </p>
           </div>
         </div>
+        <img class="company-logo" :src="info.company.logo" alt="">
       </header>
       <div class="board">
         <div class="user-number item">
@@ -232,6 +233,9 @@ export default {
   background: url('https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/home-bg.png') no-repeat;
   background-size: 100% 100%;
 }
+header {
+  position: relative;
+}
 .user {
   padding: 60rpx 39rpx;
   .intr {
@@ -264,6 +268,15 @@ export default {
     height: 148rpx;
     border-radius: 50%;
   }
+}
+.company-logo {
+  position: absolute;
+  top: 60rpx;
+  right: 39rpx;
+  width: 256rpx;
+  display: inline-block;
+  height: 148rpx;
+  overflow: auto;
 }
 .board {
   position: relative;

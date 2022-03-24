@@ -67,12 +67,38 @@
               <span class="time">{{ item.updatedAt | date_format }}</span>
             </view>
             <view class="txt">{{ item.content }}</view>
+            <view 
+              v-if="item.imgs"
+              :class="{
+                img : true,
+                one: JSON.parse(item.imgs).length === 1,
+                more: JSON.parse(item.imgs).length > 1
+              }"
+            >
+              <img 
+                v-for="(img, i) in JSON.parse(item.imgs)"
+                :key="i"
+                :src="img"
+                alt=""
+              />
+            </view>
           </view>
-          <view
-            class="foot"
-            @click="openDialog(item)"
-          >
-            <img src="../../static/img/go.png" alt="">
+          <view class="foot">
+            <button 
+              v-if="!item.imgs || (item.imgs && hasAutoSaveImg)"
+              @click="openDialog(item)"
+            >
+              保存全部素材
+            </button>
+
+            <button
+              v-else
+              class="save"
+              type="default"
+              open-type="openSetting"
+            >
+              授权保存图片
+            </button>
           </view>
         </view>
       </mescroll-body>
@@ -93,12 +119,19 @@ export default {
   },
   mixins: [MescrollMixin],
   onShow() {
+    const that = this
     const pagearr = getCurrentPages()// 获取应用页面栈
     const currentPage = pagearr[pagearr.length - 1]// 获取当前页面信息
     this.pageType = currentPage.options.type
+    wx.getSetting({
+      success(res) {
+        that.hasAutoSaveImg = res.authSetting['scope.writePhotosAlbum'] === false ? false : true;
+      }
+    })
   },
   data() {
     return {
+      hasAutoSaveImg: false,
       currentFodder: {
       },
       dialogIsShow: false,
@@ -135,17 +168,98 @@ export default {
     renderList(tagId) {
       this.currentTagId = tagId
     },
-    openDialog(item) {
-      this.dialogIsShow = true
+    async openDialog(item) {
       this.currentFodder = item
+      if (item.imgs && JSON.parse(item.imgs).length) {
+        wx.showToast({
+          title: '图片正在保存...',
+          icon: 'loading',
+          duration: 1000000
+        })
+        const imgs = JSON.parse(item.imgs)
+        for (let i = 0; i < imgs.length; i++) {
+          const tempFilePath = await this.downloadImg(imgs[i])
+          await this.saveImg(tempFilePath)
+        }
+        wx.hideToast()
+      }
+      wx.showToast({
+        title: '开始复制文案',
+        icon: 'loading',
+      })
+      setTimeout(() => {
+        this.saveText(item)
+      }, 800);
+      
     },
-    saveText() {
+    downloadImg(img) {
+      return new Promise(reslove => {
+        uni.downloadFile({
+          url: img,
+          success: (res) => {
+            const {tempFilePath} = res
+            reslove(tempFilePath)
+          }
+        })
+      })
+    },
+    saveImg(tempFilePath) {
+      const that = this
+      return new Promise(resolve => {
+        wx.getSetting({
+          success(res) {
+            // 如果没有则获取授权
+            if (!res.authSetting['scope.writePhotosAlbum']) {
+              wx.authorize({
+                scope: 'scope.writePhotosAlbum',
+                success() {
+                  wx.saveImageToPhotosAlbum({
+                    filePath: tempFilePath,
+                    success() {
+                      resolve()
+                    },
+                    fail() {
+                      wx.showToast({
+                        title: '保存失败',
+                        icon: 'none'
+                      })
+                    }
+                  })
+                },
+                fail() {
+                  wx.showToast({
+                    title: '请授权才能保存图片到本地'
+                  })
+                  that.hasAutoSaveImg = false
+                }
+              })
+            } else {
+              // 有则直接保存
+              wx.saveImageToPhotosAlbum({
+                filePath: tempFilePath,
+                success() {
+                  resolve()
+                },
+                fail() {
+                  wx.showToast({
+                    title: '保存失败',
+                    icon: 'none'
+                  })
+                }
+              })
+            }
+          }
+        })
+      })
+      
+    },
+    saveText(item) {
       const that = this
       wx.setClipboardData({
-        data: that.currentFodder.content,
-        success (res) {
+        data: item.content,
+        success () {
           wx.getClipboardData({
-            success (res) {
+            success () {
               wx.showToast({
                 title: '复制成功'
               })
@@ -172,7 +286,7 @@ export default {
       }
     },
     getFodderList() {
-      if (this.fodderList.length === this.listCount || this.isLoading ||(this.currentTagId === 0 )) return
+      if (this.fodderList.length === this.listCount || this.isLoading || (this.currentTagId === 0 )) return
       this.isLoading = true
       const sendData = {
         count: this.pagesize,
@@ -283,14 +397,14 @@ export default {
   margin-top: 24rpx;
   background-color: #fff;
   .card {
-    display: flex;
     border-radius: 20rpx;
-    padding: 36rpx 49rpx;
+    padding: 20rpx 49rpx;
     background-color: #f7f9fd;
     margin-bottom: 15rpx;
     .content {
-      width: 453rpx;
+      width: 100%;
       flex: 1;
+      border-bottom: 1rpx solid #d7dbe3;
       .txt {
         color: #606060;
         font-size: 22rpx;
@@ -303,6 +417,8 @@ export default {
       .card-head {
         display: flex;
         line-height: 80rpx;
+        border-bottom: 1rpx solid #d7dbe3;
+        margin: 0 0 20rpx;;
         .title {
           font-size: 28rpx;
           font-weight: bold;
@@ -312,23 +428,47 @@ export default {
           color: #111110;
         }
         .time {
+          text-align: right;
+          flex: 1;
           margin-left: 30rpx;
           font-size: 20rpx;
           color: #969696;
         }
       }
+      .img {
+        margin: 20rpx;
+        img {
+          display: inline-block;
+          vertical-align: top;
+          margin: 5rpx;
+        }
+      }
+      .one {
+        img {
+          width: 320rpx;
+          height: 510rpx;
+        }
+      }
+      .more {
+        img {
+          width: 160rpx;
+          height: 160rpx;
+        }
+      }
     }
     .foot {
-      width: 22px;
-      padding: 0 16px;
-      position: relative;
-      img {
-        width: 22rpx;
-        height: 37rpx;
+      padding: 20rpx 0 0;
+      text-align: center;
+      button {
+        display: inline-block;
         vertical-align: top;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
+        height: 60rpx;
+        width: 290rpx;
+        line-height: 60rpx;
+        font-size: 24rpx;
+        color: #fff;
+        background-color: #7dd296;
+        border-radius: 30rpx;
       }
     }
   }

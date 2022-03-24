@@ -24,8 +24,8 @@ export default {
         })
         wx.config(data)
         wx.ready(() => {
-          const share_title = '活动量管理工具'
-          const share_desc = '麦凯盈活动量管理工具小程序'
+          const share_title = '麦凯盈营销云'
+          const share_desc = '麦凯盈麦凯盈营销云小程序'
           const share_link = url
           const share_img = 'https://img-1307195053.cos.ap-nanjing.myqcloud.com/maikaiying.jpg'
           wx.showOptionMenu()

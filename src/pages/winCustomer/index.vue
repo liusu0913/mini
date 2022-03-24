@@ -77,7 +77,7 @@
             class="content"
           >
             <img
-              :src="item.img"
+              :src="item.thumbnail"
               alt=""
             >
             <div class="intr">
@@ -258,7 +258,7 @@ export default {
     },
     getActiveList() {
       if (!this.currentTagId) return
-      if (this.isLoading || this.activeList.length === this.listCount) return
+      if (this.isLoading || (this.activeList.length === this.listCount && this.activeList.length)) return
       this.isLoading = true
       const sendData = {
         count: this.pagesize,
