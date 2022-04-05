@@ -6,6 +6,7 @@
         <img
           class="headerPic"
           :src="userInfo.avatar"
+          @click="changeImg"
         >
         <i class="arrowIcon" @click="changeImg"></i>
       </li>
@@ -115,8 +116,12 @@ export default {
     editUserMsg() {
       if (this.userInfo.jobId) {
         this.updateUserInfo(this.userInfo)
+        const userInfo = JSON.parse(JSON.stringify(this.userInfo))
+        if (userInfo.company) {
+          delete userInfo.company
+        }
         user.update({
-          ...this.userInfo
+          ...userInfo
         }).then(data => {
           wx.showToast({
             icon: 'none',

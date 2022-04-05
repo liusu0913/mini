@@ -28,15 +28,15 @@
       <div class="content">
         <div class="item">
           <p>分享内容数</p>
-          {{ parseInt(activeData.share) || 0 }}
+          {{ parseInt(activeData.shareActiveCount) || 0 }}
         </div>
         <div class="item">
           <p>浏览人数</p>
-          {{ parseInt(activeData.pv) || 0 }}
+          {{ parseInt(activeData.uv) || 0 }}
         </div>
         <div class="item">
           <p>分享量</p>
-          {{ parseInt(activeData.shareActiveCount) || 0 }}
+          {{ parseInt(activeData.share) || 0 }}
         </div>
       </div>
     </div>
@@ -49,6 +49,7 @@
         <input
           v-model="filterRules"
           confirm-type="search"
+          @confirm="beginSearch"
           placeholder="请输入内容的标题"
         >
       </div>
@@ -135,7 +136,7 @@ export default {
     return {
       mpShow: false,
       activeData: {
-        pv: 0,
+        uv: 0,
         share: 0,
         shareActiveCount: 0
       },
@@ -158,10 +159,10 @@ export default {
       
       timeArr: [{
         key: 1,
-        text: '24小时'
+        text: '今日'
       }, {
         key: 2,
-        text: '48小时'
+        text: '昨日'
       }, {
         key: 7,
         text: '近7日'

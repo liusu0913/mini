@@ -81,6 +81,22 @@ export default {
       setUserLogin: 'user/setUserLogin'
     }),
     userLogin() {
+      if (!this.jobId) {
+        wx.showToast({
+          title: '请输入员工工号',
+          icon: 'none',
+          duration: 1500
+        })
+        return 
+      }
+      if (!this.phone) {
+        wx.showToast({
+          title: '请输入员工手机号',
+          icon: 'none',
+          duration: 1500
+        })
+        return 
+      }
       if (!this.code) {
         wx.showToast({
           title: '请输入验证码',
@@ -88,7 +104,6 @@ export default {
           duration: 1500
         })
         return 
-
       }
       if (this.jobId && this.phone) {
         uni.showToast({
@@ -100,6 +115,14 @@ export default {
           jobId: this.jobId,
           phone: this.phone
         }).then(data => {
+          if (!data) return
+          if (data.code) {
+            wx.showToast({
+              icon: 'none',
+              title: data.message
+            })
+            return
+          }
           uni.setStorageSync('mini_token', data.token);
           this.getUserInfo((info) => {
             if (info.unionid) {
@@ -138,6 +161,22 @@ export default {
       }
     },
     async getCode() {
+      if (!this.jobId) {
+        wx.showToast({
+          title: '请输入员工工号',
+          icon: 'none',
+          duration: 1500
+        })
+        return 
+      }
+      if (!this.phone) {
+        wx.showToast({
+          title: '请输入员工手机号',
+          icon: 'none',
+          duration: 1500
+        })
+        return 
+      }
       let res = await login.sendSms({
         jobId: this.jobId,
         phone: this.phone

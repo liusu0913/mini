@@ -99,6 +99,7 @@ export default {
   mixins: [MescrollMixin],
   data() {
     return {
+      timer: null,
       isSearch: false,
       userList: [],
       listCount: 20,
@@ -128,6 +129,11 @@ export default {
         this.offset = 0
         this.userList = []
         this.getUserList()
+      } else {
+        if (this.timer) clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
+          this.beginSearch()
+        }, 500);
       }
     }
   },
@@ -153,7 +159,7 @@ export default {
       }
     },
     getUserList() {
-      if (this.isLoading || this.userList.length === this.listCount) return
+      if (this.isLoading) return
       this.isLoading = true
       const sendData = {
         count: this.pagesize,

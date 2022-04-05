@@ -20,7 +20,7 @@
         src="../../static/img/phone.png">
     </div>
       <p class="bottom" v-if="item.record && item.record.length">
-      <span>{{ getHour(item.record[0].updatedAt) ? `${getHour(item.record[0].updatedAt)}小时前` : '1小时内'  }}</span>访问了 {{ item.record[0].active.title }}
+      <span>{{ getTime(item.record[0].updatedAt) }}</span>访问了 {{ item.record[0].active.title }}
     </p>
   </div>
 </template>
@@ -35,9 +35,17 @@
       }
     },
     methods: {
-      getHour(time) {
+      getTime(time) {
         const spaceTime = new Date().getTime() - new Date(time).getTime()
-        return Math.floor( spaceTime / 1000 / 60 / 60) - 8
+        const h = Math.floor( spaceTime / 1000 / 60 / 60)
+        if (!h) {
+          return '1小时内'
+        }
+        if (h > 24) {
+          return `${parseInt(h / 24, 10)}天前`
+        } else {
+          return `${h}小时前`
+        }
       },
       goUserInfoPage(item) {
         uni.navigateTo({

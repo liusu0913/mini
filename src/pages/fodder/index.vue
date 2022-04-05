@@ -38,7 +38,8 @@
           <input
             v-model="filterRules"
             confirm-type="search"
-            placeholder="请输入内容的标题或者分享文案"
+            @confirm="beginSearch"
+            placeholder="请输入内容的标题"
           >
         </div>
       </div>

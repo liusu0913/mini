@@ -1,7 +1,6 @@
 // vue.config.js
 const { envUrlMap } = require('./src/libs/request/envConfig')
 const { NODE_ENV } = process.env
-console.log(envUrlMap.mock.url, envUrlMap.development.url, envUrlMap.production.url)
 module.exports = {
   devServer: {
     proxy: {

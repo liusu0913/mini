@@ -85,7 +85,7 @@ http.interceptors.response.use(
         break
       default:
         if (code) {
-          if ([100002, 10004].includes(code)) {
+          if ([100002, 10004, 10008].includes(code)) {
             uni.showToast({
               title: '登录状态失效，请重新登陆',
               icon: 'none'
@@ -94,7 +94,12 @@ http.interceptors.response.use(
             uni.navigateTo({
               url: '/pages/login/index'
             })
-          } 
+          } else {
+            uni.showToast({
+              title: message,
+              icon: 'none'
+            })
+          }
         } else {
           errorCreate(`${message}: ${response.config.url}`)
         }

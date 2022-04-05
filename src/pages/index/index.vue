@@ -6,7 +6,7 @@
     >
       <header class="header">
         <div class="user">
-          <img :src="info.avatar">
+          <img :src="info.avatar" @click="editUserMsg">
           <div class="intr">
             <p class="name">
               {{ info.name }}
@@ -126,6 +126,11 @@ export default {
       setUserInfo: 'user/setUserInfo',
       setUserLogin: 'user/setUserLogin'
     }),
+    editUserMsg() {
+      uni.navigateTo({
+        url: '/pages/edit/index'
+      })
+    },
     goSendMorePage(type) {
       homeApi.readSopTips({
         type
@@ -181,7 +186,7 @@ export default {
       })
       // 初始化主页的数据
       homeApi.getRank().then((res) => {
-        if (res.rank) {
+        if (res.rank && res.rank <= 100) {
           this.boardData.rank = res.rank
         }
       })
