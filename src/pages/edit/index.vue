@@ -114,6 +114,13 @@ export default {
       })
     },
     editUserMsg() {
+      if (this.userInfo.name.length > 6) {
+        wx.showToast({
+          icon: 'none',
+          title: '姓名输入不能大于6个字符'
+        })
+        return 
+      }
       if (this.userInfo.jobId) {
         this.updateUserInfo(this.userInfo)
         const userInfo = JSON.parse(JSON.stringify(this.userInfo))

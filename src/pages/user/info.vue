@@ -34,7 +34,7 @@
         <span
           v-for="(tag, index) in userTags"
           :key="index"
-        >{{ tag }}</span>
+        >{{ tag.tag }}</span>
       </view>
        <mescroll-body
         ref="mescrollRef"
@@ -105,11 +105,6 @@ export default {
     }
   },
   mounted() {
-    const tagMap = {
-      commend: '已参与',
-      regular: '已留资',
-      share: '已分享'
-    }
     getUser.info({
       openId: this.userId
     }).then(data => {
@@ -118,11 +113,9 @@ export default {
     getUser.getUserTags({
       openId: this.userId
     }).then(data => {
-      Object.keys(data).forEach(key => {
-        if (data[key] && tagMap[key]) {
-          this.userTags.push(tagMap[key])
-        }
-      });
+      if (Array.isArray(data)) {
+        this.userTags = data
+      }
     })
   },
   methods: {

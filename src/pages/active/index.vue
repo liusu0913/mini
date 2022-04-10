@@ -313,6 +313,8 @@ export default {
       });
       const that = this
       const { bgConfig } = that
+      console.log(`${that.active.url}?activeId=${that.active.activeId}&jobId=${that.info.jobId}&belongCompany=${that.info.belongCompany}`, 11111)
+
       getSharePoster({
         that,
         cb: () => {
