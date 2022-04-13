@@ -114,6 +114,14 @@ export default {
       })
     },
     editUserMsg() {
+      console.log(this.userInfo)
+      if (this.userInfo.name.replace(/\s+/g,'') === '') {
+        wx.showToast({
+          icon: 'none',
+          title: '姓名不能为空'
+        })
+        return 
+      }
       if (this.userInfo.name.length > 6) {
         wx.showToast({
           icon: 'none',
@@ -121,6 +129,7 @@ export default {
         })
         return 
       }
+
       if (this.userInfo.jobId) {
         this.updateUserInfo(this.userInfo)
         const userInfo = JSON.parse(JSON.stringify(this.userInfo))

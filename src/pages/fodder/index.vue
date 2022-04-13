@@ -287,7 +287,8 @@ export default {
       }
     },
     getFodderList() {
-      if (this.fodderList.length === this.listCount || this.isLoading || (this.currentTagId === 0 )) return
+      if (!this.currentTagId) return
+      if ((this.fodderList.length === this.listCount && this.fodderList.length) || this.isLoading) return
       this.isLoading = true
       const sendData = {
         count: this.pagesize,

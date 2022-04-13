@@ -188,6 +188,8 @@ export default {
       homeApi.getRank().then((res) => {
         if (res.rank && res.rank <= 100) {
           this.boardData.rank = res.rank
+        } else {
+          this.boardData.rank = '-'
         }
       })
       homeApi.getNewAdd().then(res => {
@@ -248,7 +250,7 @@ header {
     margin-left: 30rpx;
     margin-top: 34rpx;
     p {
-      font-size: 44rpx;
+      font-size: 36rpx;
       font-weight: 500;
       color: #fff;
       line-height: 50rpx;

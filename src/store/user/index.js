@@ -22,7 +22,7 @@ export default {
       if (!info.avatar) {
         info.avatar = 'https://rocket-dev.woa.com/images/rocket.png'
       }
-      if (info.name) {
+      if (info.name || info.avatar) {
         state.info = info
         state.isLogin = true
       }
