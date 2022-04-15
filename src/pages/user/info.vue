@@ -9,7 +9,7 @@
         </p>
         <p class="data">
           <span class="recommend">{{ userInfo.finer ? `推荐度 ${userInfo.finer}%` : '不推荐' }}</span>
-          <span>最初来源 {{ userInfo.sourceOpenId ? '用户引导' : '直接访问'}}</span>
+          <span>最初来源 {{ userInfo.sourceOpenId ? '客户转介绍' : '直接访问'}}</span>
         </p>
       </view>
     </view>

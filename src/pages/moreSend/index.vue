@@ -119,17 +119,11 @@ export default {
       })
     },
     skipPage(item) {
-      const pageMap = {
-        0: '/pages/active/index',
-        1: '/pages/active/index',
-        // 1: '/pages/fodder/index'
-        // 1: '/pages/fodder/index'
-      }
       if (item.active.diffuseTypeId !== 1) {
         this.sharePeople(item)
       } else {
         uni.navigateTo({
-          url: `${pageMap[this.pageType]}?activeId=${item.active.activeId}`
+          url: `/pages/active/index?activeId=${item.active.activeId}`
         })
       }
     },

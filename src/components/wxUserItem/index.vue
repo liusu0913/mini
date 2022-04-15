@@ -12,6 +12,9 @@
         <p class="name">
           {{ item.name }}
         </p>
+        <p class="source">
+          {{ item.sourceOpenId ? '转介绍客户' : '直接客户' }}
+        </p>
       </div>
       <img
         v-if="item.phone"
@@ -20,8 +23,8 @@
         src="../../static/img/phone.png">
     </div>
       <p class="bottom" v-if="item.record && item.record.length">
-      <span>{{ getTime(item.record[0].updatedAt) }}</span>访问了 {{ item.record[0].active.title }}
-    </p>
+        <span>{{ getTime(item.record[0].updatedAt) }}</span>访问了 {{ item.record[0].active.title }}
+      </p>
   </div>
 </template>
 
@@ -77,18 +80,29 @@
     }
     .user {
       flex: 1;
-      line-height: 108rpx;
+      // line-height: 108rpx;
       margin-left: 40rpx;
       p {
         margin: 0;
         padding: 0;
       }
       .name {
-        display: inline-block;
+        display: block;
+        margin-top: 20rpx;
         font-size: 32rpx;
         font-weight: bold;
         color: #494949;
         line-height: 40rpx;
+      }
+      .source {
+        display: inline-block;
+        padding: 10rpx;
+        margin-top: 10rpx;
+        font-size: 20rpx;
+        color: #ccc;
+        color: #fff;
+        background-color: #49bb8a;
+        border-radius: 20rpx;
       }
       .tag {
         margin-left: 18rpx;
