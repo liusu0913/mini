@@ -40,10 +40,13 @@ export default {
     const pagearr = getCurrentPages()// 获取应用页面栈
     const currentPage = pagearr[pagearr.length - 1]// 获取当前页面信息
     this.pageType = currentPage.options.type
+    this.source = currentPage.options.source
   },
   mixins: [MescrollMixin],
   data() {
     return {
+      // 判断是不是拉去客户影响的客户
+      source: '',
       timeChooseShow: false,
       timeChooseMap: ['最后访问时间', '最早访问时间'],
       currentChooseTime: 0,
@@ -107,27 +110,39 @@ export default {
       this.currentChooseTime = index
       this.timeChooseShow = false
     },
-    getUserList() {
+    async getUserList() {
       if (this.isLoading || this.userList.length === this.listCount) return
       this.isLoading = true
-      getUserListFunMap[this.pageType]({
-        count: this.pagesize,
-        limit: this.pagesize,
-        offset: this.offset
-      }).then(data => {
-        if (data.users) {
-          if (this.offset) {
-            this.userList = this.userList.concat(data.users)
-          } else {
-            this.userList = data.users
-          }
-          // this.filterUserList()
-          this.listCount = data.total
-          this.offset += this.pagesize
-          this.isLoading = false
-          this.mescroll.endSuccess(this.userList.length, this.userList.length !== this.listCount) // 必传参数(当前页的数据个数, 是否有下一页true/false)
+      let data = {}
+      if (this.source) {
+        data = await getUser.list({
+          count: this.pagesize,
+          limit: this.pagesize,
+          offset: this.offset,
+          sourceOpenId: this.source
+        })
+        if (data.list) {
+          data.users = data.list
         }
-      })
+      } else {
+        data = await getUserListFunMap[this.pageType]({
+          count: this.pagesize,
+          limit: this.pagesize,
+          offset: this.offset
+        })
+      }
+      if (data.users) {
+        if (this.offset) {
+          this.userList = this.userList.concat(data.users)
+        } else {
+          this.userList = data.users
+        }
+        // this.filterUserList()
+        this.listCount = data.total
+        this.offset += this.pagesize
+        this.isLoading = false
+        this.mescroll.endSuccess(this.userList.length, this.userList.length !== this.listCount) // 必传参数(当前页的数据个数, 是否有下一页true/false)
+      }
     }
   }
 }

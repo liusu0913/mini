@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <img class="banner" src="https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/login-banner.png" alt="">
+    <img class="banner" src="../../static/img/login-banner.png" alt="">
     <div class="login-area">
       <div class="job-number item">
         <p>员工工号</p>

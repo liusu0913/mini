@@ -22,7 +22,7 @@
         <span>近30天活跃</span>
         {{ (userInfo.monthActive) || 0 }}
       </p>
-      <p class="people">
+      <p class="people" @click="goUserList(userInfo)">
         <span>TA的人脉</span>
         {{ (userInfo.effectCount) || 0 }}
       </p>
@@ -119,6 +119,13 @@ export default {
     })
   },
   methods: {
+    goUserList(userinfo) {
+      if (userinfo.effectCount && userinfo.openId) {
+        uni.navigateTo({
+          url: `/pages/user/list?source=${userinfo.openId}`
+        })
+      }
+    },
     getActiveHistroy() {
       if (this.isLoading || this.activeHistroy.length === this.listCount) return
       this.isLoading = true

@@ -2,7 +2,6 @@
   <view
     class="mescroll-body mescroll-render-touch"
     :class="{'mescorll-sticky': sticky}"
-    :style="{'minHeight':minHeight, 'padding-top': padTop, 'padding-bottom': padBottom}"
     :change:prop="wxsBiz.propObserver"
     :prop="wxsProp"
     @touchstart="wxsBiz.touchstartEvent"

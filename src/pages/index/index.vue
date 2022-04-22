@@ -173,7 +173,8 @@ export default {
       getTags.list({
         count: 100,
         offset: 0,
-        fatherId: 0
+        fatherId: 0,
+        type: '1'
       }).then(res => {
         this.navList = []
         res.list.forEach(item => {

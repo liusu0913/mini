@@ -1,31 +1,33 @@
 <template>
-  <div
-    class="card"
-    @click="goUserInfoPage(item)"
-  >
-    <div class="top">
-      <img
-        :src="item.avatar"
-        alt=""
-      >
-      <div class="user">
-        <p class="name">
-          {{ item.name }}
-        </p>
-        <p class="source">
-          {{ item.sourceOpenId ? '转介绍客户' : '直接客户' }}
-        </p>
+  <navigator :url="`/pages/user/info?id=${item.openId}`">
+    <div
+      class="card"
+    >
+      <div class="top">
+        <img
+          :src="item.avatar"
+          alt=""
+        >
+        <div class="user">
+          <p class="name">
+            {{ item.name }}
+          </p>
+          <p class="source">
+            {{ item.sourceOpenId ? '转介绍客户' : '直接客户' }}
+          </p>
+        </div>
+        <img
+          v-if="item.phone"
+          class="phone"
+          @click.stop="callPhone(item)"
+          src="../../static/img/phone.png">
       </div>
-      <img
-        v-if="item.phone"
-        class="phone"
-        @click.stop="callPhone(item)"
-        src="../../static/img/phone.png">
+        <p class="bottom" v-if="item.record && item.record.length">
+          <span>{{ getTime(item.record[0].createdAt || item.record[0].updatedAt) }}</span>访问了 {{ item.record[0].active.title }}
+        </p>
     </div>
-      <p class="bottom" v-if="item.record && item.record.length">
-        <span>{{ getTime(item.record[0].updatedAt) }}</span>访问了 {{ item.record[0].active.title }}
-      </p>
-  </div>
+  </navigator>
+  
 </template>
 
 <script>
@@ -51,7 +53,7 @@
         }
       },
       goUserInfoPage(item) {
-        uni.navigateTo({
+        uni.redirectTo({
           url: `/pages/user/info?id=${item.openId}`
         })
       },

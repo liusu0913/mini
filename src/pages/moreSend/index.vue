@@ -34,7 +34,7 @@
               v-if="item.active.tags.length"
               class="use"
             >
-              活动使用：{{ item.active.tags[0].name }}
+              活动使用：{{ item.use }}
             </p>
           </div>
           <div class="foot">
@@ -42,8 +42,6 @@
             <img src="../../static/img/go.png" alt="">
           </div>
         </div>
-        
-        
       </div>
     </mescroll-body>
   </view>
@@ -80,10 +78,6 @@ export default {
   data() {
     return {
       pageType: 0,
-      useMap: {
-        0: '获客',
-        1: '销售'
-      },
       isLoading: false,
       downOption: {
         use: false,
@@ -130,11 +124,11 @@ export default {
     sharePeople(item) {
       const that = this
       const sendData = {
-        title: item.type ? `这是您的${item.type.title}，请查收`: '这是您的营销内容，请查收',
-        keyword1: item.title,
-        remark: item.endTime 
-          ? `任务时间：${this.$options.filters.date_format(item.startTime)}至${this.$options.filters.date_format(item.endTime)}` 
-          : `任务开始时间：${this.$options.filters.date_format(item.startTime)}}`
+        title: '这是您的营销内容，请查收',
+        keyword1: item.active.title,
+        remark: item.active.endTime
+          ? `任务时间：${this.$options.filters.date_format(item.active.startTime)}至${this.$options.filters.date_format(item.active.endTime)}` 
+          : `任务开始时间：${this.$options.filters.date_format(item.active.startTime)}`
 
       }
       getClient.sendMsg({

@@ -44,7 +44,8 @@
         </div>
       </div>
       <div class="items">
-        <multTabs 
+        <multTabs
+          :tagType="tagType"
           v-if="!isSearch" 
           @tagChange="renderList" 
         />
@@ -89,7 +90,7 @@
               v-if="!item.imgs || (item.imgs && hasAutoSaveImg)"
               @click="openDialog(item)"
             >
-              保存全部素材
+              复制话术
             </button>
 
             <button
@@ -124,14 +125,25 @@ export default {
     const pagearr = getCurrentPages()// 获取应用页面栈
     const currentPage = pagearr[pagearr.length - 1]// 获取当前页面信息
     this.pageType = currentPage.options.type
+    this.tagType = this.pageType === '2' ? '3' : '2'
     wx.getSetting({
       success(res) {
         that.hasAutoSaveImg = res.authSetting['scope.writePhotosAlbum'] === false ? false : true;
       }
     })
   },
+  onPageScroll(e) {
+    if (e.scrollTop >= 225) {
+      this.scrollTop = true
+    } else {
+      this.scrollTop = false
+
+    }
+  },
   data() {
     return {
+      scrollTop: false,
+      tagType: 1,
       hasAutoSaveImg: false,
       currentFodder: {
       },
@@ -396,7 +408,7 @@ export default {
   }
 }
 .list {
-  margin-top: 24rpx;
+  margin-top: 458rpx;
   background-color: #fff;
   .card {
     border-radius: 20rpx;
@@ -476,6 +488,11 @@ export default {
   }
 }
 .head {
+  position: fixed;
+  top: 0;
+  z-index: 999;
+  width: 710rpx;
+  box-sizing: border-box;
   background-color: #fff;
   padding: 34rpx 15rpx 0rpx;
   border-radius: 10rpx;

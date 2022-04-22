@@ -2,6 +2,7 @@
   <view class="container">
     <view class="client">
       <e-tab
+        class="top-tab"
         :active-tab="currentTab"
         :tab-list="tabList"
         @change="chanegTab"
@@ -46,7 +47,7 @@
             </div>
           </div>
           <div class="head">
-            <p @click="clickChoseTime">
+            <!-- <p @click="clickChoseTime">
               {{ timeChooseMap[currentChooseTime] }}
               <span
                 class="icon icon-down-arrows"
@@ -60,7 +61,7 @@
               >
                 {{ item }}
               </li>
-            </ul>
+            </ul> -->
           </div>
           <mescroll-body
             ref="mescrollRef"
@@ -211,19 +212,38 @@ export default {
 </script>
 
 <style lang="scss" scope>
+.top-tab {
+  position: fixed;
+  top: 0;
+  left: 20rpx;
+  width: 700rpx;
+  border-radius: 10rpx;
+  z-index: 999;
+  padding-bottom: 110rpx;
+  background-color: #fff;
+  .e-tab {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+}
 .container {
   box-sizing: border-box;
   background: url('https://baike-med-1256891581.file.myqcloud.com/mini_lite/production/static/test/bg.png') no-repeat;
   background-size: 100% 100%;
   padding: 0 15rpx;
   height: 100vh;
+  overflow: auto;
 }
 .client {
   box-sizing: border-box;
   height: 100%;
   background-color: #fff;
   border-radius: 10rpx;
-  padding: 0 10rpx;
+  .content {
+    padding-top: 100rpx;
+  }
   .nav {
     list-style: none;
     margin: 0;
@@ -281,6 +301,8 @@ export default {
 }
 .head {
   position: relative;
+  height: 170rpx;
+  z-index: 990;
   padding: 0 20rpx;
   line-height: 80rpx;
   background-color: #fff;
@@ -315,8 +337,13 @@ export default {
   }
 }
 .search {
-  margin: 40rpx;
-  background-color: #f7f9fd;
+  position: fixed;
+  top: 100rpx;
+  left: 15rpx;
+  width: 630rpx;
+  z-index: 999;
+  padding: 40rpx;
+  background-color: #fff;
   border-radius: 10rpx;
   display: flex;
   overflow: hidden;

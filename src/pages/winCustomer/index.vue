@@ -40,33 +40,36 @@
         </div>
       </div>
     </div>
-    <div class="search">
-      <div class="input">
-        <img
-          src="../../static/img/search.png"
-          @click="beginSearch"
-        />
-        <input
-          v-model="filterRules"
-          confirm-type="search"
-          @confirm="beginSearch"
-          placeholder="请输入内容的标题"
-        >
+    <div :class="{'scroll-top': scrollTop}">
+      <div class="search">
+        <div class="input">
+          <img
+            src="../../static/img/search.png"
+            @click="beginSearch"
+          />
+          <input
+            v-model="filterRules"
+            confirm-type="search"
+            @confirm="beginSearch"
+            placeholder="请输入内容的标题"
+          >
+        </div>
       </div>
-    </div>
-    <multTabs 
-      :defaultNavId="currentTabId"
-      @tagChange="renderList" 
-      v-if="!isSearch && currentTabId"
-    >
-    </multTabs>
-    <div class="items">
+      <multTabs 
+        :defaultNavId="currentTabId"
+        @tagChange="renderList" 
+        v-if="!isSearch && currentTabId"
+      >
+      </multTabs>
+    </div>   
+    <div class="items" :style="{paddingTop: `${scrollTop ? '460rpx' : 0}`}">
       <mescroll-body
         ref="mescrollRef"
         :down="downOption"
         @init="mescrollInit"
         @up="getActiveList"
         class="list"
+        :minHeight="0"
       >
         <div
           class="item"
@@ -132,8 +135,17 @@ export default {
   onLoad(options) {
     this.currentTabId = Number(options.tab)
   },
+  onPageScroll(e) {
+    if (e.scrollTop >= 225) {
+      this.scrollTop = true
+    } else {
+      this.scrollTop = false
+
+    }
+  },
   data() {
     return {
+      scrollTop: false,
       mpShow: false,
       activeData: {
         uv: 0,
@@ -206,7 +218,7 @@ export default {
         keyword1: item.title,
         remark: item.endTime 
           ? `任务时间：${this.$options.filters.date_format(item.startTime)}至${this.$options.filters.date_format(item.endTime)}` 
-          : `任务开始时间：${this.$options.filters.date_format(item.startTime)}}`
+          : `任务开始时间：${this.$options.filters.date_format(item.startTime)}`
 
       }
       getClient.sendMsg({
@@ -439,6 +451,15 @@ export default {
   }
 
 }
+.scroll-top {
+  padding-top: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  z-index: 999;
+}
 .search {
   background-color: #f7f9fd;
   margin: 0 45rpx 24rpx;
@@ -477,6 +498,7 @@ export default {
   }
 
 }
+
 .board {
   color: #5c616a;
   background-color: #fff;

@@ -42,6 +42,10 @@ export default {
   props: {
     defaultNavId: {
       type: Number
+    },
+    tagType: {
+      type: String,
+      default: '1'
     }
   },
   mounted() {
@@ -106,7 +110,8 @@ export default {
       const res = await getTags.list({
         count: 100,
         offset: 0,
-        fatherId
+        fatherId,
+        type: this.tagType
       })
       cb && cb(res.list)
     },
